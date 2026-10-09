@@ -1,0 +1,609 @@
+/* =========================================================
+   SISTEMA DE VENTAS - ECONTAINERS
+   ESTILOS GENERALES
+   ========================================================= */
+
+
+/* =========================================================
+   CONFIGURACION GENERAL
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+body {
+    font-family: Arial, sans-serif;
+    color: #162B58;
+}
+
+
+/* =========================================================
+   INICIO DE SESION
+   ========================================================= */
+
+.login-body {
+
+    min-height: 100vh;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    /*
+       Fondo utilizando los colores del logo de ECONTAINERS
+    */
+
+    background: linear-gradient(
+        90deg,
+
+        #E30613 0%,
+        #E30613 25%,
+
+        #0055A4 25%,
+        #0055A4 50%,
+
+        #F58220 50%,
+        #F58220 75%,
+
+        #FDB813 75%,
+        #FDB813 100%
+    );
+
+}
+
+
+/* Contenedor del formulario */
+
+.login-contenedor {
+
+    width: 90%;
+
+    max-width: 420px;
+
+    background-color: white;
+
+    border-radius: 12px;
+
+    padding: 35px;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.20);
+
+    text-align: center;
+
+}
+
+
+/* Logo */
+
+.login-logo {
+
+    width: 220px;
+
+    max-width: 80%;
+
+    margin-bottom: 20px;
+
+}
+
+
+/* Titulo */
+
+.login-titulo {
+
+    color: #162B58;
+
+    margin-bottom: 8px;
+
+    font-size: 25px;
+
+}
+
+
+/* Subtitulo */
+
+.login-subtitulo {
+
+    color: #555555;
+
+    margin-bottom: 25px;
+
+    font-size: 15px;
+
+}
+
+
+/* Formulario */
+
+.login-formulario {
+
+    text-align: left;
+
+}
+
+
+/* Etiquetas */
+
+.login-formulario label {
+
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-weight: bold;
+
+    color: #162B58;
+
+}
+
+
+/* Campos */
+
+.login-formulario input {
+
+    width: 100%;
+
+    padding: 12px;
+
+    margin-bottom: 18px;
+
+    border: 1px solid #BFC7D6;
+
+    border-radius: 6px;
+
+    font-size: 15px;
+
+}
+
+
+/* Campo seleccionado */
+
+.login-formulario input:focus {
+
+    outline: none;
+
+    border-color: #F58220;
+
+}
+
+
+/* Boton ingresar */
+
+.boton-principal {
+
+    width: 100%;
+
+    padding: 13px;
+
+    border: none;
+
+    border-radius: 6px;
+
+    background-color: #0055A4;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+
+/* Efecto al pasar el mouse */
+
+.boton-principal:hover {
+
+    background-color: #003F7D;
+
+}
+
+
+/* Texto inferior */
+
+.login-pie {
+
+    margin-top: 22px;
+
+    color: #777777;
+
+    font-size: 12px;
+
+}
+
+
+/* =========================================================
+   PAGINA PRINCIPAL
+   ========================================================= */
+
+.principal-body {
+
+    min-height: 100vh;
+
+    background-color: #F2F4F7;
+
+}
+
+
+
+/* ENCABEZADO */
+
+.encabezado {
+
+    background-color: #FFFFFF;
+
+    color: #000000;
+
+    padding: 15px 35px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    border-bottom: 3px solid #0055A4;
+
+}
+
+
+/* Logo del encabezado */
+
+.encabezado-logo {
+
+    width: 190px;
+
+    background-color: transparent;
+
+    padding: 0;
+
+    border-radius: 0;
+
+}
+
+
+/* Usuario */
+
+.usuario {
+
+    color: #000000;
+
+    font-size: 15px;
+
+}
+
+
+/* Nombre del usuario */
+
+.usuario strong {
+
+    color: #E30613;
+
+}
+
+
+/* =========================================================
+   CONTENIDO PRINCIPAL
+   ========================================================= */
+
+.contenido-principal {
+
+    width: 90%;
+
+    max-width: 1100px;
+
+    margin: 35px auto;
+
+}
+
+
+/* TItulo */
+
+.titulo-principal {
+
+    color: #162B58;
+
+    font-size: 30px;
+
+    margin-bottom: 8px;
+
+}
+
+
+/* Descripcion */
+
+.descripcion-principal {
+
+    color: #555555;
+
+    margin-bottom: 30px;
+
+}
+
+
+/* =========================================================
+   SECCIONES
+   ========================================================= */
+
+.seccion {
+
+    margin-bottom: 35px;
+
+}
+
+
+/* Titulo de seccion */
+
+.seccion-titulo {
+
+    color: #162B58;
+
+    font-size: 21px;
+
+    margin-bottom: 15px;
+
+    border-left: 5px solid #F58220;
+
+    padding-left: 10px;
+
+}
+
+
+/* =========================================================
+   TARJETAS DE CONTENEDORES
+   ========================================================= */
+
+.tarjetas {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 18px;
+
+}
+
+
+/* Tarjeta general */
+
+.tarjeta {
+
+    background-color: white;
+
+    border-radius: 10px;
+
+    padding: 25px 18px;
+
+    text-align: center;
+
+    box-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.10);
+
+}
+
+
+/* Titulo de tarjeta */
+
+.tarjeta h3 {
+
+    color: #162B58;
+
+    margin-bottom: 10px;
+
+}
+
+
+/* Texto de tarjeta */
+
+.tarjeta p {
+
+    color: #666666;
+
+    font-size: 14px;
+
+    margin-bottom: 18px;
+
+}
+
+
+/* =========================================================
+   COLORES DE LAS TARJETAS
+   ========================================================= */
+
+
+/* 20 pies */
+
+.tarjeta-roja {
+
+    border-top: 5px solid #E30613;
+
+}
+
+
+/* 40 pies */
+
+.tarjeta-azul {
+
+    border-top: 5px solid #0055A4;
+
+}
+
+
+/* 40 HC */
+
+.tarjeta-naranja {
+
+    border-top: 5px solid #F58220;
+
+}
+
+
+/* Reefer */
+
+.tarjeta-amarilla {
+
+    border-top: 5px solid #FDB813;
+
+}
+
+
+/* =========================================================
+   BOTONES DE LAS TARJETAS
+   ========================================================= */
+
+.boton-tarjeta {
+
+    display: inline-block;
+
+    text-decoration: none;
+
+    background-color: #162B58;
+
+    color: white;
+
+    padding: 10px 18px;
+
+    border-radius: 5px;
+
+    font-size: 14px;
+
+}
+
+
+/* Efecto del boton */
+
+.boton-tarjeta:hover {
+
+    background-color: #0055A4;
+
+}
+
+
+/* =========================================================
+   ADMINISTRACION
+   ========================================================= */
+
+.administracion {
+
+    background-color: white;
+
+    border-radius: 10px;
+
+    padding: 25px;
+
+    box-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.10);
+
+}
+
+
+/* Boton cargar venta */
+
+.boton-administracion {
+
+    display: inline-block;
+
+    text-decoration: none;
+
+    background-color: #F58220;
+
+    color: white;
+
+    padding: 12px 20px;
+
+    border-radius: 5px;
+
+    font-weight: bold;
+
+}
+
+
+/* Efecto */
+
+.boton-administracion:hover {
+
+    background-color: #D86608;
+
+}
+
+
+/* =========================================================
+   PIE DE PAGINA
+   ========================================================= */
+
+.pie {
+
+    text-align: center;
+
+    padding: 25px;
+
+    color: #666666;
+
+    font-size: 13px;
+
+}
+
+
+/* =========================================================
+   ADAPTACION PARA PANTALLAS MEDIANAS
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    .tarjetas {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+
+    .encabezado {
+
+        flex-direction: column;
+
+        text-align: center;
+
+    }
+
+}
+
+
+/* =========================================================
+   ADAPTACION PARA CELULARES
+   ========================================================= */
+
+@media (max-width: 550px) {
+
+    .tarjetas {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .contenido-principal {
+
+        width: 92%;
+
+    }
+
+
+    .titulo-principal {
+
+        font-size: 25px;
+
+    }
+
+}
