@@ -607,3 +607,260 @@ body {
     }
 
 }
+
+/* =========================================================
+   PANTALLA DE VENTAS
+   ========================================================= */
+
+.ventas-encabezado {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.ventas-encabezado .descripcion-principal {
+    margin-bottom: 0;
+}
+
+.boton-volver {
+    display: inline-block;
+    padding: 11px 18px;
+    border-radius: 6px;
+    background-color: #162B58;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.boton-volver:hover {
+    background-color: #0055A4;
+}
+
+.resumen-ventas {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 35px;
+}
+
+.resumen-venta {
+    background-color: white;
+    border-radius: 10px;
+    padding: 22px;
+    border-left: 5px solid #F58220;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.resumen-etiqueta {
+    display: block;
+    color: #666666;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.resumen-venta strong {
+    display: block;
+    color: #162B58;
+    font-size: 25px;
+    overflow-wrap: anywhere;
+}
+
+.estado-ventas {
+    padding: 18px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    background-color: white;
+    color: #162B58;
+    border: 1px solid #D8DEE8;
+}
+
+.tabla-contenedor {
+    width: 100%;
+    overflow-x: auto;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.tabla-ventas {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 650px;
+}
+
+.tabla-ventas th {
+    background-color: #162B58;
+    color: white;
+    padding: 15px 12px;
+    text-align: left;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.tabla-ventas td {
+    padding: 14px 12px;
+    border-bottom: 1px solid #E5E8EF;
+    color: #333333;
+    font-size: 14px;
+}
+
+.tabla-ventas tbody tr:hover {
+    background-color: #F5F7FA;
+}
+
+.tabla-ventas tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.estado-pago {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 5px;
+    background-color: #FFF0D9;
+    color: #8A4B00;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.boton-reintentar {
+    margin-top: 12px;
+    padding: 11px 18px;
+    border: none;
+    border-radius: 6px;
+    background-color: #0055A4;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.boton-reintentar:hover {
+    background-color: #003F7D;
+}
+
+@media (max-width: 550px) {
+    .ventas-encabezado {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .resumen-ventas {
+        grid-template-columns: 1fr;
+    }
+
+    .resumen-venta strong {
+        font-size: 22px;
+    }
+}
+
+/* Filtro de ventas por fechas */
+
+.filtro-fechas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 16px;
+    margin-top: 15px;
+}
+
+.campo-filtro {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.campo-filtro label {
+    font-weight: bold;
+}
+
+.campo-filtro input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font: inherit;
+}
+
+.botones-filtro {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.boton-filtrar,
+.boton-limpiar {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font: inherit;
+}
+
+.boton-filtrar {
+    background-color: #103E73;
+    color: white;
+}
+
+.boton-limpiar {
+    background-color: #e5e5e5;
+    color: #222;
+}
+
+/* FORMULARIO PARA REGISTRAR PAGOS */
+
+.formulario-pago {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    background-color: white;
+    padding: 22px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.campo-pago {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.campo-pago label {
+    color: #162B58;
+    font-weight: bold;
+}
+
+.campo-pago input,
+.campo-pago select {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #BFC7D6;
+    border-radius: 6px;
+    font: inherit;
+}
+
+.campo-pago input:focus,
+.campo-pago select:focus {
+    outline: none;
+    border-color: #F58220;
+}
+
+.campo-pago small {
+    color: #555555;
+}
+
+.formulario-pago button {
+    justify-self: start;
+}
+
+#mensajePago {
+    margin-top: 15px;
+}
+
+@media (max-width: 550px) {
+    .formulario-pago {
+        grid-template-columns: 1fr;
+    }
+}

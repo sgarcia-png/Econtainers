@@ -1,0 +1,343 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reporte de ventas por fecha</title>
+
+    <link rel="stylesheet" href="estilos.css">
+
+    <style>
+        .reporte-contenedor {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .filtros-reporte {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: end;
+            gap: 15px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .campo-reporte {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .campo-reporte input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .boton-buscar {
+            padding: 11px 18px;
+            background: #103E73;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .boton-buscar:hover {
+            background: #082B54;
+        }
+
+        .resumen-reporte {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .dato-reporte {
+            flex: 1;
+            min-width: 180px;
+            padding: 18px;
+            background: white;
+            border-radius: 8px;
+            border-left: 5px solid #F28C00;
+        }
+
+        .dato-reporte h3 {
+            margin-top: 0;
+            color: #103E73;
+        }
+
+        .dato-reporte p {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 0;
+        }
+
+        .tabla-reporte-contenedor {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        .tabla-reporte {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        .tabla-reporte th,
+        .tabla-reporte td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tabla-reporte th {
+            background: #103E73;
+            color: white;
+        }
+
+        .mensaje-reporte {
+            margin: 15px 0;
+        }
+
+        .enlace-volver {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #103E73;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body class="principal-body">
+
+    <header class="encabezado">
+        <img
+            src="img/logo.png"
+            alt="ECONTAINERS"
+            class="encabezado-logo"
+        >
+
+        <div class="usuario">
+            Usuario: <strong>Administradora</strong>
+        </div>
+    </header>
+
+    <main class="contenido-principal">
+
+    <div class="ventas-encabezado">
+
+        <div>
+            <h1 class="titulo-principal">
+                Reporte de ventas por fecha
+            </h1>
+
+            <p class="descripcion-principal">
+                Selecciona un periodo para consultar las ventas registradas
+            </p>
+        </div>
+
+        <a href="principal.php" class="boton-volver">
+            Volver al inicio
+        </a>
+
+    </div>
+
+        <form id="formularioReporte" class="filtros-reporte">
+
+            <div class="campo-reporte">
+                <label for="fechaDesde">Fecha desde</label>
+                <input type="date" id="fechaDesde" required>
+            </div>
+
+            <div class="campo-reporte">
+                <label for="fechaHasta">Fecha hasta</label>
+                <input type="date" id="fechaHasta" required>
+            </div>
+
+            <button type="submit" id="botonBuscar" class="boton-buscar">
+                Buscar ventas
+            </button>
+
+        </form>
+
+        <p id="mensajeReporte" class="mensaje-reporte" aria-live="polite">
+            Selecciona las fechas y presiona Buscar ventas
+        </p>
+
+        <section class="resumen-reporte">
+
+            <article class="dato-reporte">
+                <h3>Cantidad de ventas</h3>
+                <p id="cantidadVentas">0</p>
+            </article>
+
+            <article class="dato-reporte">
+                <h3>Total de importes</h3>
+                <p id="totalImportes">$ 0,00</p>
+            </article>
+
+        </section>
+
+        <div class="tabla-reporte-contenedor">
+
+            <table class="tabla-reporte">
+                <thead>
+                    <tr>
+                        <th>N.º de venta</th>
+                        <th>Fecha</th>
+                        <th>DNI del cliente</th>
+                        <th>Monto total</th>
+                        <th>Estado de pago</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaReporte">
+                    <tr>
+                        <td colspan="5">
+                            Todavia no se realizo una consulta
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+    </main>
+
+    <script>
+        const formulario = document.getElementById("formularioReporte");
+        const fechaDesde = document.getElementById("fechaDesde");
+        const fechaHasta = document.getElementById("fechaHasta");
+        const botonBuscar = document.getElementById("botonBuscar");
+        const mensajeReporte = document.getElementById("mensajeReporte");
+        const cantidadVentas = document.getElementById("cantidadVentas");
+        const totalImportes = document.getElementById("totalImportes");
+        const tablaReporte = document.getElementById("tablaReporte");
+
+        function crearCelda(valor) {
+            const celda = document.createElement("td");
+            celda.textContent = valor ?? "";
+            return celda;
+        }
+
+        function mostrarMonto(valor) {
+            const monto = Number(valor);
+
+            if (!Number.isFinite(monto)) {
+                return "No disponible";
+            }
+
+            return monto.toLocaleString("es-AR", {
+                style: "currency",
+                currency: "ARS",
+                minimumFractionDigits: 2
+            });
+        }
+
+        formulario.addEventListener("submit", async function(evento) {
+            evento.preventDefault();
+
+            if (fechaDesde.value > fechaHasta.value) {
+                mensajeReporte.textContent =
+                    "La fecha desde no puede ser posterior a la fecha hasta";
+                return;
+            }
+
+            botonBuscar.disabled = true;
+            mensajeReporte.textContent = "Buscando ventas...";
+            tablaReporte.replaceChildren();
+
+            try {
+                const parametros = new URLSearchParams({
+                    desde: fechaDesde.value,
+                    hasta: fechaHasta.value
+                });
+
+                const respuesta = await fetch(
+                    "api/reporte_ventas_fecha.php?" + parametros.toString(),
+                    {
+                        headers: {
+                            "Accept": "application/json"
+                        },
+                        cache: "no-store"
+                    }
+                );
+
+                const resultado = await respuesta.json();
+
+                if (!respuesta.ok || !resultado.ok) {
+                    throw new Error(
+                        resultado.mensaje || "No se pudo generar el reporte"
+                    );
+                }
+
+                cantidadVentas.textContent = resultado.cantidad;
+
+                totalImportes.textContent = mostrarMonto(
+                    resultado.total_importes
+                );
+
+                if (resultado.datos.length === 0) {
+                    const fila = document.createElement("tr");
+                    const celda = document.createElement("td");
+
+                    celda.colSpan = 5;
+                    celda.textContent =
+                        "No se encontraron ventas en ese periodo";
+
+                    fila.appendChild(celda);
+                    tablaReporte.appendChild(fila);
+
+                    mensajeReporte.textContent =
+                        "Consulta realizada. No se encontraron ventas";
+
+                    return;
+                }
+
+                resultado.datos.forEach(function(venta) {
+                    const fila = document.createElement("tr");
+
+                    fila.appendChild(crearCelda(venta.nro_venta));
+                    fila.appendChild(crearCelda(venta.fecha));
+                    fila.appendChild(crearCelda(venta.dni_cliente));
+                    fila.appendChild(crearCelda(
+                        mostrarMonto(venta.monto_total)
+                    ));
+                    fila.appendChild(crearCelda(venta.estado_pago));
+
+                    tablaReporte.appendChild(fila);
+                });
+
+                mensajeReporte.textContent =
+                    "Reporte generado correctamente.";
+
+            } catch (error) {
+                const fila = document.createElement("tr");
+                const celda = document.createElement("td");
+
+                celda.colSpan = 5;
+                celda.textContent = "No se pudieron cargar las ventas";
+
+                fila.appendChild(celda);
+                tablaReporte.appendChild(fila);
+
+                mensajeReporte.textContent = error.message;
+
+            } finally {
+                botonBuscar.disabled = false;
+            }
+        });
+    </script>
+
+</body>
+</html>
