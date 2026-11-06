@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-10-2026 a las 13:22:42
+-- Tiempo de generación: 06-11-2026 a las 12:07:46
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -83,7 +83,10 @@ INSERT INTO `contenedor` (`codigo`, `deposito`, `id_tipo`, `estado`) VALUES
 ('CONT-001', 'Pringles', 1, 'Vendido'),
 ('CONT-002', 'Pringles', 1, 'Vendido'),
 ('CONT-PRUEBA-001', 'Pringles', 1, 'Vendido'),
-('CONT-PRUEBA-002', 'Depósito de prueba', 1, 'Vendido');
+('CONT-PRUEBA-002', 'Depósito de prueba', 1, 'Vendido'),
+('CONT-PRUEBA-004', 'Pringles', 1, 'Disponible'),
+('CONT-PRUEBA-005', 'Bahía Blanca', 2, 'Disponible'),
+('CONT-PRUEBA-006', 'Pringles', 3, 'Disponible');
 
 -- --------------------------------------------------------
 
