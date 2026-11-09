@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 06-11-2026 a las 12:07:46
+-- Tiempo de generación: 06-11-2026 a las 15:51:59
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -60,7 +60,9 @@ CREATE TABLE `cliente` (
 --
 
 INSERT INTO `cliente` (`DNI`, `nombre`, `apellido`, `telefono`, `email`) VALUES
-('40111222', 'Juan', 'Perez', '2915000001', 'juan.perez@ejemplo.com');
+('40111222', 'Juan', 'Perez', '2915000001', 'juan.perez@ejemplo.com'),
+('41569875', 'GImena', 'Test', '0115698756', 'gimena@test.com'),
+('58797563', 'Sandra', 'Gomez', '291578896', 'Sandra39gomez@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -82,11 +84,14 @@ CREATE TABLE `contenedor` (
 INSERT INTO `contenedor` (`codigo`, `deposito`, `id_tipo`, `estado`) VALUES
 ('CONT-001', 'Pringles', 1, 'Vendido'),
 ('CONT-002', 'Pringles', 1, 'Vendido'),
+('CONT-005', 'Bahía Blanca', 9, 'Disponible'),
 ('CONT-PRUEBA-001', 'Pringles', 1, 'Vendido'),
 ('CONT-PRUEBA-002', 'Depósito de prueba', 1, 'Vendido'),
-('CONT-PRUEBA-004', 'Pringles', 1, 'Disponible'),
-('CONT-PRUEBA-005', 'Bahía Blanca', 2, 'Disponible'),
-('CONT-PRUEBA-006', 'Pringles', 3, 'Disponible');
+('CONT-PRUEBA-003', 'Pringles', 1, 'Vendido'),
+('CONT-PRUEBA-004', 'Pringles', 1, 'Vendido'),
+('CONT-PRUEBA-005', 'Bahía Blanca', 3, 'Vendido'),
+('CONT-PRUEBA-006', 'Pringles', 3, 'Vendido'),
+('CONT-PRUEBA-007', 'aaaaaa', 5, 'Disponible');
 
 -- --------------------------------------------------------
 
@@ -107,7 +112,9 @@ CREATE TABLE `documentacion` (
 
 INSERT INTO `documentacion` (`nro_doc`, `tipo_doc`, `archivo`, `nro_venta`) VALUES
 (1, 'Factura', 'factura_prueba.pdf', 1),
-(2, 'Factura', '9e9aa7814545d1a9abbe7504e62a9beb.pdf', 2);
+(2, 'Factura', '9e9aa7814545d1a9abbe7504e62a9beb.pdf', 2),
+(3, 'Factura', '038f0b39f7b9a999e2845a06f48bdf7a.pdf', 6),
+(4, 'Comprobante de pago', 'bd656a589681e2e92a323483752fa2d1.pdf', 7);
 
 -- --------------------------------------------------------
 
@@ -129,7 +136,12 @@ CREATE TABLE `pago` (
 
 INSERT INTO `pago` (`nro_pago`, `fecha_pago`, `monto_pago`, `forma_pago`, `nro_venta`) VALUES
 (1, '2026-10-09', 500000.00, 'Transferencia', 1),
-(2, '2026-10-23', 200000.00, 'Efectivo', 1);
+(2, '2026-10-23', 200000.00, 'Efectivo', 1),
+(3, '2026-11-06', 1000000.00, 'Efectivo', 8),
+(4, '2026-11-06', 500000.00, 'Efectivo', 7),
+(5, '2026-11-06', 1500000.00, 'Transferencia', 6),
+(6, '2026-11-06', 1000000.00, 'Débito', 6),
+(7, '2026-11-06', 1000000.00, 'Crédito', 7);
 
 -- --------------------------------------------------------
 
@@ -152,7 +164,11 @@ INSERT INTO `renglon_venta` (`id_renglon`, `precio`, `codigo_contenedor`, `nro_v
 (1, 1500000.00, 'CONT-001', 1),
 (2, 1500000.00, 'CONT-002', 2),
 (3, 1500000.00, 'CONT-PRUEBA-001', 3),
-(4, 1500000.00, 'CONT-PRUEBA-002', 4);
+(4, 1500000.00, 'CONT-PRUEBA-002', 4),
+(5, 3500000.00, 'CONT-PRUEBA-006', 5),
+(6, 2500000.00, 'CONT-PRUEBA-005', 6),
+(7, 1500000.00, 'CONT-PRUEBA-003', 7),
+(8, 1500000.00, 'CONT-PRUEBA-004', 8);
 
 -- --------------------------------------------------------
 
@@ -171,9 +187,10 @@ CREATE TABLE `tipo_contenedor` (
 --
 
 INSERT INTO `tipo_contenedor` (`id_tipo`, `nombre_tipo`, `valor`) VALUES
-(1, 'Contenedor 20 pies', 1500000.00),
-(2, 'Contenedor 40 pies', 2500000.00),
-(3, '40HC', 3500000.00);
+(1, '40 pies HC', 1600000.00),
+(3, '40 pies', 350444000.10),
+(5, '20 pies', 58000000.00),
+(9, 'reefer', 4000000.00);
 
 -- --------------------------------------------------------
 
@@ -198,7 +215,11 @@ INSERT INTO `ventas` (`nro_venta`, `fecha`, `monto_total`, `estado_pago`, `dni_c
 (1, '2026-10-09', 1500000.00, 'Parcial', '40111222', 0),
 (2, '2026-10-19', 1500000.00, 'Pendiente', '40111222', 0),
 (3, '2026-10-23', 1500000.00, 'Pendiente', '40111222', 0),
-(4, '2026-10-26', 1500000.00, 'Pendiente', '40111222', 0);
+(4, '2026-10-26', 1500000.00, 'Pendiente', '40111222', 0),
+(5, '2026-11-04', 3500000.00, 'Pendiente', '40111222', 0),
+(6, '2026-11-06', 2500000.00, 'Pagado', '41569875', 0),
+(7, '2026-11-03', 1500000.00, 'Pagado', '41569875', 0),
+(8, '2026-11-02', 1500000.00, 'Parcial', '41569875', 0);
 
 --
 -- Índices para tablas volcadas
@@ -272,31 +293,31 @@ ALTER TABLE `administradora`
 -- AUTO_INCREMENT de la tabla `documentacion`
 --
 ALTER TABLE `documentacion`
-  MODIFY `nro_doc` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `nro_doc` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `pago`
 --
 ALTER TABLE `pago`
-  MODIFY `nro_pago` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `nro_pago` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `renglon_venta`
 --
 ALTER TABLE `renglon_venta`
-  MODIFY `id_renglon` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_renglon` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_contenedor`
 --
 ALTER TABLE `tipo_contenedor`
-  MODIFY `id_tipo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_tipo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `nro_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `nro_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Restricciones para tablas volcadas
