@@ -29,14 +29,14 @@ $tiposPermitidos = [
     "reefer" => "reefer"
 ];
 
-if (!isset($tiposPermitidos[$nombreNormalizado])) {
+/*if (!isset($tiposPermitidos[$nombreNormalizado])) {
     http_response_code(400);
     echo json_encode([
         "ok" => false,
         "mensaje" => "Solo se permiten los tipos 20 pies, 40 pies, 40HC y reefer"
     ], JSON_UNESCAPED_UNICODE);
     exit;
-}
+}*/
 
 if (!is_numeric($valor) || (float)$valor <= 0) {
     http_response_code(400);

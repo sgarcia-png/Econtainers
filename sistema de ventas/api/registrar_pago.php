@@ -57,7 +57,6 @@ $formasPermitidas = [
     "Débito",
     "Crédito",
     "Depósito",
-    "Otro"
 ];
 
 if (!$nroVenta || $nroVenta < 1) {

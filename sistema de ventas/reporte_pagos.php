@@ -560,8 +560,8 @@ formularioPago.addEventListener("submit", async function (evento) {
     } catch (error) {
         mensajePago.textContent = error.message;
     } finally {
-        btnGuardarPago.disabled = false;
-    }
+    btnGuardarPago.disabled = ventasPendientes.length === 0;
+}
 });
 
 fechaPago.value = new Date().toLocaleDateString("en-CA");

@@ -163,19 +163,15 @@
 
         <div class="contenedor">
 
-    <div class="panel">
+    <div class="panel" id="panelEditar" style="display: none;">
         <h2 id="tituloFormulario">Registrar tipo de contenedor</h2>
 
         <form id="formulario">
             <input type="hidden" id="id_tipo">
 
             <label for="nombre_tipo">Tipo de contenedor</label>
+            
             <select id="nombre_tipo" required>
-                <option value="">Selecciona un tipo</option>
-                <option value="20 pies">20 pies</option>
-                <option value="40 pies">40 pies</option>
-                <option value="40HC">40HC</option>
-                <option value="reefer">reefer</option>
             </select>
 
             <label for="valor">Valor del contenedor ($)</label>
@@ -200,7 +196,7 @@
         </form>
 
         <p class="nota">
-            Solo se permiten 20 pies, 40 pies, 40HC y reefer
+            Solo se permiten 20 pies, 40 pies, 40 pies HC y reefer
             El valor debe ser mayor que cero
         </p>
     </div>
@@ -212,7 +208,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <!--<th>ID</th>-->
                         <th>Tipo</th>
                         <th>Valor</th>
                         <th>Acciones</th>
@@ -270,6 +266,8 @@
                 );
             }
 
+            var selector = document.getElementById("nombre_tipo");
+
             tablaTipos.replaceChildren();
 
             if (resultado.datos.length === 0) {
@@ -284,10 +282,18 @@
             }
 
             resultado.datos.forEach(function(tipo) {
+                //cargamos selector de tipos de contenedores
+                 // <option value="5">20 pies</option>
+                var option = document.createElement("option");
+                option.value = tipo.id_tipo;
+                option.innerHTML = tipo.nombre_tipo;
+                selector.appendChild(option);
+                
                 const fila = document.createElement("tr");
 
                 const celdaId = document.createElement("td");
                 celdaId.textContent = tipo.id_tipo;
+                celdaId.style.display = "none";
 
                 const celdaNombre = document.createElement("td");
                 celdaNombre.textContent = tipo.nombre_tipo;
@@ -308,15 +314,15 @@
                     editarTipo(tipo);
                 });
 
-                const botonEliminar = document.createElement("button");
+                /*const botonEliminar = document.createElement("button");
                 botonEliminar.type = "button";
                 botonEliminar.className = "eliminar";
                 botonEliminar.textContent = "Eliminar";
                 botonEliminar.addEventListener("click", function() {
                     eliminarTipo(tipo.id_tipo, tipo.nombre_tipo);
-                });
+                });*/
 
-                celdaAcciones.append(botonEditar, botonEliminar);
+                celdaAcciones.append(botonEditar);
                 fila.append(celdaId, celdaNombre, celdaValor, celdaAcciones);
                 tablaTipos.appendChild(fila);
             });
@@ -339,8 +345,11 @@
 
     // Preparar el formulario para editar un tipo
     function editarTipo(tipo) {
+        var panelEditar = document.getElementById("panelEditar");
+        panelEditar.style.display = "block";
         campoId.value = tipo.id_tipo;
-        campoNombre.value = tipo.nombre_tipo;
+        campoNombre.value = tipo.id_tipo;// tipo.nombre_tipo;
+        campoNombre.disabled = true;
         campoValor.value = tipo.valor;
 
         tituloFormulario.textContent = "Modificar tipo de contenedor";
@@ -358,6 +367,7 @@
         tituloFormulario.textContent = "Registrar tipo de contenedor";
         botonGuardar.textContent = "Registrar tipo";
         botonCancelar.hidden = true;
+        document.getElementById("panelEditar").style.display = "none";
         mostrarMensaje(mensajeFormulario, "");
     }
 

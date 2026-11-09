@@ -783,6 +783,25 @@ body {
     border-radius: 6px;
     font: inherit;
 }
+.campo-filtro select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #333333;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.campo-filtro select:focus {
+    border-color: #103E73;
+    box-shadow: 0 0 0 3px rgba(16, 62, 115, 0.12);
+}
 
 .botones-filtro {
     display: flex;

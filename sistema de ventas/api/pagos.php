@@ -19,12 +19,22 @@ if (!isset($_SESSION["administradora_id"])) {
 require_once __DIR__ . "/../config/conexion.php";
 
 try {
+
     $fechaDesde = trim($_GET["fecha_desde"] ?? "");
     $fechaHasta = trim($_GET["fecha_hasta"] ?? "");
     $formaPago = trim($_GET["forma_pago"] ?? "");
 
+    // Formas de pago disponibles en el sistema
+    $formasPago = [
+    "Efectivo",
+    "Transferencia",
+    "Débito",
+    "Crédito",
+    "Depósito"
+];
     // Validar las fechas recibidas
     $validarFecha = function ($fecha) {
+
         if ($fecha === "") {
             return true;
         }
@@ -36,6 +46,7 @@ try {
     };
 
     if (!$validarFecha($fechaDesde) || !$validarFecha($fechaHasta)) {
+
         http_response_code(400);
 
         echo json_encode([
@@ -51,6 +62,7 @@ try {
         $fechaHasta !== "" &&
         $fechaDesde > $fechaHasta
     ) {
+
         http_response_code(400);
 
         echo json_encode([
@@ -61,22 +73,23 @@ try {
         exit();
     }
 
-    // Obtener las formas de pago disponibles
-    $consultaFormas = "
-        SELECT DISTINCT forma_pago
-        FROM pago
-        ORDER BY forma_pago
-    ";
+    // Validar la forma de pago
+    if (
+        $formaPago !== "" &&
+        !in_array($formaPago, $formasPago, true)
+    ) {
 
-    $resultadoFormas = $conexion->query($consultaFormas);
-    $formasPago = [];
+        http_response_code(400);
 
-    while ($fila = $resultadoFormas->fetch_assoc()) {
-        $formasPago[] = $fila["forma_pago"];
+        echo json_encode([
+            "ok" => false,
+            "mensaje" => "La forma de pago no es valida"
+        ], JSON_UNESCAPED_UNICODE);
+
+        exit();
     }
 
     // Consultar los pagos y sus ventas relacionadas
-    
     $sql = "
         SELECT
             p.nro_pago,
@@ -85,49 +98,44 @@ try {
             p.forma_pago,
             p.nro_venta,
             v.dni_cliente,
-            CASE
-                WHEN COALESCE(resumen.total_pagado, 0) >= v.monto_total
-                    THEN 'Pagado'
-                WHEN COALESCE(resumen.total_pagado, 0) > 0
-                    THEN 'Parcial'
-                ELSE 'Pendiente'
-            END AS estado_pago
+            v.estado_pago
         FROM pago AS p
         INNER JOIN ventas AS v
             ON p.nro_venta = v.nro_venta
-        LEFT JOIN (
-            SELECT
-                nro_venta,
-                SUM(monto_pago) AS total_pagado
-            FROM pago
-            GROUP BY nro_venta
-        ) AS resumen
-            ON resumen.nro_venta = v.nro_venta
         WHERE v.eliminado = 0
     ";
-
 
     $parametros = [];
     $tipos = "";
 
+    // Aplicar filtro por fecha inicial
     if ($fechaDesde !== "") {
+
         $sql .= " AND p.fecha_pago >= ?";
+
         $parametros[] = $fechaDesde;
         $tipos .= "s";
     }
 
+    // Aplicar filtro por fecha final
     if ($fechaHasta !== "") {
+
         $sql .= " AND p.fecha_pago <= ?";
+
         $parametros[] = $fechaHasta;
         $tipos .= "s";
     }
 
+    // Aplicar filtro por forma de pago
     if ($formaPago !== "") {
+
         $sql .= " AND p.forma_pago = ?";
+
         $parametros[] = $formaPago;
         $tipos .= "s";
     }
 
+    // Ordenar los pagos por fecha y numero
     $sql .= " ORDER BY p.fecha_pago DESC, p.nro_pago DESC";
 
     $stmt = $conexion->prepare($sql);
@@ -143,6 +151,7 @@ try {
     $stmt->execute();
 
     $resultado = $stmt->get_result();
+
     $pagos = [];
 
     while ($fila = $resultado->fetch_assoc()) {
@@ -152,6 +161,7 @@ try {
     $stmt->close();
     $conexion->close();
 
+    // Enviar los pagos y las formas de pago a JavaScript
     echo json_encode([
         "ok" => true,
         "datos" => $pagos,
@@ -159,6 +169,7 @@ try {
     ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
 } catch (Throwable $e) {
+
     error_log("Error al consultar pagos: " . $e->getMessage());
 
     http_response_code(500);

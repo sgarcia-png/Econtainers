@@ -22,7 +22,7 @@ $valor = $datos["valor"] ?? "";
 $tiposPermitidos = [
     "20 pies" => "20 pies",
     "40 pies" => "40 pies",
-    "40hc" => "40HC",
+    "40 pies hc" => "40 pies HC",
     "reefer" => "reefer"
 ];
 
@@ -37,14 +37,14 @@ if (!is_numeric($idTipo) || (int)$idTipo <= 0) {
     exit;
 }
 
-if (!isset($tiposPermitidos[$nombreNormalizado])) {
+/*if (!isset($tiposPermitidos[$nombreNormalizado])) {
     http_response_code(400);
     echo json_encode([
         "ok" => false,
         "mensaje" => "Solo se permiten los tipos 20 pies, 40 pies, 40HC y reefer"
     ], JSON_UNESCAPED_UNICODE);
     exit;
-}
+}*/
 
 if (!is_numeric($valor) || (float)$valor <= 0) {
     http_response_code(400);
@@ -56,12 +56,12 @@ if (!is_numeric($valor) || (float)$valor <= 0) {
 }
 
 $idTipo = (int)$idTipo;
-$nombreTipo = $tiposPermitidos[$nombreNormalizado];
+//$nombreTipo = $tiposPermitidos[$nombreNormalizado];
 $valor = (float)$valor;
 
 try {
     // Comprobar que el tipo exista
-    $consulta = $conexion->prepare(
+   /* $consulta = $conexion->prepare(
         "SELECT id_tipo FROM tipo_contenedor WHERE id_tipo = ?"
     );
     $consulta->bind_param("i", $idTipo);
@@ -74,10 +74,10 @@ try {
             "mensaje" => "No se encontro el tipo de contenedor"
         ], JSON_UNESCAPED_UNICODE);
         exit;
-    }
+    }*/
 
     // Comprobar que el nombre no pertenezca a otro registro
-    $consulta = $conexion->prepare(
+    /*$consulta = $conexion->prepare(
         "SELECT id_tipo
          FROM tipo_contenedor
          WHERE nombre_tipo = ? AND id_tipo <> ?"
@@ -92,15 +92,15 @@ try {
             "mensaje" => "Ese tipo ya esta registrado en otro registro"
         ], JSON_UNESCAPED_UNICODE);
         exit;
-    }
+    }*/
 
     // Actualizar el nombre y el valor
     $consulta = $conexion->prepare(
         "UPDATE tipo_contenedor
-         SET nombre_tipo = ?, valor = ?
+         SET  valor = ?
          WHERE id_tipo = ?"
     );
-    $consulta->bind_param("sdi", $nombreTipo, $valor, $idTipo);
+    $consulta->bind_param("di", $valor, $idTipo);
     $consulta->execute();
 
     echo json_encode([
