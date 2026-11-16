@@ -1,0 +1,280 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de API - ECONTAINERS</title>
+</head>
+
+<body>
+
+    <h1>Tipos de contenedores</h1>
+
+    <p>Datos obtenidos desde la base de datos MySQL:</p>
+
+    <button onclick="cargarTipos()">Consultar contenedores</button>
+
+    <div id="resultado">
+        Presiona el boton para consultar los datos
+    </div>
+
+    <script>
+        function cargarTipos() {
+
+            const resultado = document.getElementById("resultado");
+
+            resultado.textContent = "Cargando datos...";
+
+            fetch("api/tipos_contenedor.php")
+                .then(function (respuesta) {
+
+                    if (!respuesta.ok) {
+                        throw new Error("No se pudo consultar la API");
+                    }
+
+                    return respuesta.json();
+                })
+                .then(function (datos) {
+
+                    if (!datos.ok) {
+                        throw new Error(datos.mensaje || "Ocurrio un error");
+                    }
+
+                    resultado.replaceChildren();
+
+                    if (datos.datos.length === 0) {
+                        resultado.textContent =
+                            "No hay tipos de contenedores registrados";
+                        return;
+                    }
+
+                    const lista = document.createElement("ul");
+
+                    datos.datos.forEach(function (tipo) {
+
+                        const elemento = document.createElement("li");
+
+                        elemento.textContent =
+                            tipo.nombre_tipo + " - Valor: $" + tipo.valor;
+
+                        lista.appendChild(elemento);
+                    });
+
+                    resultado.appendChild(lista);
+
+                })
+                .catch(function (error) {
+
+                    resultado.textContent =
+                        "Error al consultar los datos: " + error.message;
+                });
+        }
+    </script>
+
+    <hr>
+
+    <h2>Ventas registradas</h2>
+
+    <button onclick="cargarVentas()">Consultar ventas</button>
+
+    <div id="resultadoVentas">
+        Presiona el boton para consultar las ventas
+    </div>
+
+    <script>
+        function cargarVentas() {
+
+            const resultado = document.getElementById("resultadoVentas");
+
+            resultado.textContent = "Cargando ventas...";
+
+            fetch("api/ventas.php")
+                .then(function (respuesta) {
+
+                    if (!respuesta.ok) {
+                        throw new Error("No se pudo consultar la API de ventas");
+                    }
+
+                    return respuesta.json();
+                })
+                .then(function (datos) {
+
+                    if (!datos.ok) {
+                        throw new Error(datos.mensaje || "Ocurrio un error");
+                    }
+
+                    resultado.replaceChildren();
+
+                    if (datos.datos.length === 0) {
+                        resultado.textContent = "No hay ventas registradas";
+                        return;
+                    }
+
+                    const tabla = document.createElement("table");
+                    const encabezado = document.createElement("tr");
+
+                    const columnas = [
+                        "N.º Venta",
+                        "Fecha",
+                        "Monto total",
+                        "Estado de pago",
+                        "DNI del cliente"
+                    ];
+
+                    columnas.forEach(function (columna) {
+                        const th = document.createElement("th");
+                        th.textContent = columna;
+                        encabezado.appendChild(th);
+                    });
+
+                    tabla.appendChild(encabezado);
+
+                    datos.datos.forEach(function (venta) {
+
+                        const fila = document.createElement("tr");
+
+                        [
+                            venta.nro_venta,
+                            venta.fecha,
+                            "$" + venta.monto_total,
+                            venta.estado_pago,
+                            venta.dni_cliente
+                        ].forEach(function (valor) {
+
+                            const celda = document.createElement("td");
+                            celda.textContent = valor ?? "";
+                            fila.appendChild(celda);
+                        });
+
+                        tabla.appendChild(fila);
+                    });
+
+                    resultado.appendChild(tabla);
+                })
+                .catch(function (error) {
+
+                    resultado.textContent =
+                        "Error al consultar las ventas: " + error.message;
+                });
+        }
+    </script>
+
+<hr>
+
+<h2>Registrar una venta de prueba</h2>
+
+<p>Esta prueba registrara una venta nueva utilizando un cliente
+y un contenedor que este disponible.</p>
+
+<label for="dni_cliente">DNI del cliente:</label>
+<br>
+<input
+    type="text"
+    id="dni_cliente"
+    placeholder="Ingresá el DNI del cliente"
+>
+<br><br>
+
+<label for="codigo_contenedor">Codigo del contenedor:</label>
+<br>
+<input
+    type="text"
+    id="codigo_contenedor"
+    placeholder="Ejemplo: CONT-002"
+>
+<br><br>
+
+<label for="fecha_venta">Fecha de la venta:</label>
+<br>
+<input type="date" id="fecha_venta">
+<br><br>
+
+<button type="button" id="btnRegistrarVenta">
+    Registrar venta de prueba
+</button>
+
+<p id="resultadoRegistro"></p>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const boton = document.getElementById("btnRegistrarVenta");
+    const resultado = document.getElementById("resultadoRegistro");
+
+    boton.addEventListener("click", async function () {
+
+        const dni = document.getElementById("dni_cliente").value.trim();
+        const codigo = document.getElementById("codigo_contenedor").value.trim();
+        const fecha = document.getElementById("fecha_venta").value;
+
+        if (!dni || !codigo || !fecha) {
+            resultado.textContent = "Completa el DNI, el codigo y la fecha.";
+            return;
+        }
+
+        const confirmar = confirm(
+            "Se intentara registrar una venta real en la base de datos. ¿Queres continuar?"
+        );
+
+        if (!confirmar) {
+            return;
+        }
+
+        boton.disabled = true;
+        resultado.textContent = "Registrando venta...";
+
+        try {
+
+            const respuesta = await fetch("api/registrar_venta.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    dni_cliente: dni,
+                    fecha: fecha,
+                    contenedores: [
+                        {
+                            codigo: codigo
+                        }
+                    ]
+                })
+            });
+
+            const datos = await respuesta.json();
+
+            if (!respuesta.ok || !datos.ok) {
+                resultado.textContent =
+                    "No se pudo registrar: " +
+                    (datos.mensaje || "Error desconocido");
+                return;
+            }
+
+            resultado.textContent =
+                datos.mensaje +
+                " Número de venta: " + datos.datos.nro_venta +
+                ". Total: $" +
+                Number(datos.datos.monto_total).toLocaleString("es-AR", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+
+        } catch (error) {
+
+            resultado.textContent =
+                "No se pudo conectar con la API. Revisa que Apache este iniciado.";
+
+            console.error(error);
+
+        } finally {
+            boton.disabled = false;
+        }
+    });
+
+});
+</script>
+
+</body>
+</html>

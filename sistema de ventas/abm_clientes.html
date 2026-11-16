@@ -1,0 +1,493 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de clientes</title>
+    <link rel="stylesheet" href="estilos.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 25px;
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            color: #222;
+        }
+
+        .contenedor {
+            max-width: 1100px;
+            margin: auto;
+            padding: 25px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            color: #103E73;
+            margin-top: 0;
+        }
+
+        h2 {
+            color: #103E73;
+            margin-top: 30px;
+        }
+
+        .campo {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+
+        input:focus {
+            outline: 2px solid #b9d5f3;
+            border-color: #103E73;
+        }
+
+        .botones {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .principal {
+            background: #103E73;
+        }
+
+        .secundario {
+            background: #F28C00;
+        }
+
+        .eliminar {
+            background: #c62828;
+        }
+
+        .tabla-contenedor {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #103E73;
+            color: white;
+        }
+
+        tr:hover td {
+            background: #f7f9fc;
+        }
+
+        .acciones {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+
+        #mensaje {
+            display: none;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 5px;
+        }
+
+        #mensaje.visible {
+            display: block;
+        }
+
+        #mensaje.exito {
+            background: #e4f5e8;
+            color: #17652b;
+        }
+
+        #mensaje.error {
+            background: #fde8e8;
+            color: #a11b1b;
+        }
+
+        .nota {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .contenedor {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body class="principal-body">
+
+    <main class="contenido-principal">
+
+        <div class="ventas-encabezado">
+
+            <div>
+                <h1 class="titulo-principal">Gestion de clientes</h1>
+
+                <p class="descripcion-principal">
+                    Desde esta pantalla podes registrar, editar, consultar y eliminar clientes
+                </p>
+            </div>
+
+            <a href="principal.php" class="boton-volver">
+                Volver al inicio
+            </a>
+
+        </div>
+
+        <div class="contenedor">
+    <p class="nota">
+        Desde esta pantalla podes registrar, editar, consultar y eliminar clientes
+    </p>
+
+    <h2 id="tituloFormulario">Registrar cliente</h2>
+
+    <form id="formularioCliente">
+        <div class="campo">
+            <label for="DNI">DNI:</label>
+            <input type="text" id="DNI" name="DNI"
+                   maxlength="20" required>
+        </div>
+
+        <div class="campo">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre"
+                   maxlength="100" required>
+        </div>
+
+        <div class="campo">
+            <label for="apellido">Apellido:</label>
+            <input type="text" id="apellido" name="apellido"
+                   maxlength="100" required>
+        </div>
+
+        <div class="campo">
+            <label for="telefono">Telefono:</label>
+            <input type="text" id="telefono" name="telefono"
+                   maxlength="30">
+        </div>
+
+        <div class="campo">
+            <label for="email">Correo electronico:</label>
+            <input type="email" id="email" name="email"
+                   maxlength="150">
+        </div>
+
+        <div class="botones">
+            <button type="submit" class="principal" id="btnGuardar">
+                Registrar cliente
+            </button>
+
+            <button type="button" class="secundario"
+                    id="btnCancelar" hidden>
+                Cancelar edicion
+            </button>
+        </div>
+    </form>
+
+    <div id="mensaje" role="status" aria-live="polite"></div>
+
+    <h2>Clientes registrados</h2>
+
+    <div class="tabla-contenedor">
+        <table>
+            <thead>
+                <tr>
+                    <th>DNI</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Telefono</th>
+                    <th>Correo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tablaClientes">
+                <tr>
+                    <td colspan="6">Cargando clientes...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+        </div>
+    </main>
+
+<script>
+    const formulario = document.getElementById("formularioCliente");
+    const tablaClientes = document.getElementById("tablaClientes");
+    const mensaje = document.getElementById("mensaje");
+    const tituloFormulario = document.getElementById("tituloFormulario");
+    const btnGuardar = document.getElementById("btnGuardar");
+    const btnCancelar = document.getElementById("btnCancelar");
+
+    let modoEdicion = false;
+
+    function mostrarMensaje(texto, tipo) {
+        mensaje.textContent = texto;
+        mensaje.className = "visible " + tipo;
+    }
+
+    function ocultarMensaje() {
+        mensaje.textContent = "";
+        mensaje.className = "";
+    }
+
+    function crearCelda(texto) {
+        const celda = document.createElement("td");
+        celda.textContent = texto ?? "";
+        return celda;
+    }
+
+    async function cargarClientes() {
+        tablaClientes.innerHTML =
+            '<tr><td colspan="6">Cargando clientes...</td></tr>';
+
+        try {
+            const respuesta = await fetch("api/clientes/listar.php");
+            const resultado = await respuesta.json();
+
+            if (!respuesta.ok || resultado.success === false) {
+                throw new Error(
+                    resultado.message || "No se pudieron cargar los clientes"
+                );
+            }
+
+            const clientes = Array.isArray(resultado)
+                ? resultado
+                : (resultado.data || []);
+
+            tablaClientes.innerHTML = "";
+
+            if (clientes.length === 0) {
+                tablaClientes.innerHTML =
+                    '<tr><td colspan="6">No hay clientes registrados</td></tr>';
+                return;
+            }
+
+            clientes.forEach(cliente => {
+                const fila = document.createElement("tr");
+
+                fila.appendChild(crearCelda(cliente.DNI));
+                fila.appendChild(crearCelda(cliente.nombre));
+                fila.appendChild(crearCelda(cliente.apellido));
+                fila.appendChild(crearCelda(cliente.telefono));
+                fila.appendChild(crearCelda(cliente.email));
+
+                const celdaAcciones = document.createElement("td");
+                const acciones = document.createElement("div");
+                acciones.className = "acciones";
+
+                const btnEditar = document.createElement("button");
+                btnEditar.type = "button";
+                btnEditar.className = "principal";
+                btnEditar.textContent = "Editar";
+                btnEditar.addEventListener("click", () => editarCliente(cliente));
+
+                const btnEliminar = document.createElement("button");
+                btnEliminar.type = "button";
+                btnEliminar.className = "eliminar";
+                btnEliminar.textContent = "Eliminar";
+                btnEliminar.addEventListener(
+                    "click",
+                    () => eliminarCliente(cliente, btnEliminar)
+                );
+
+                acciones.appendChild(btnEditar);
+                acciones.appendChild(btnEliminar);
+                celdaAcciones.appendChild(acciones);
+                fila.appendChild(celdaAcciones);
+                tablaClientes.appendChild(fila);
+            });
+
+        } catch (error) {
+            tablaClientes.innerHTML =
+                '<tr><td colspan="6">Error al cargar los clientes</td></tr>';
+            mostrarMensaje(error.message, "error");
+        }
+    }
+
+    function editarCliente(cliente) {
+        ocultarMensaje();
+
+        modoEdicion = true;
+
+        document.getElementById("DNI").value = cliente.DNI;
+        document.getElementById("nombre").value = cliente.nombre || "";
+        document.getElementById("apellido").value = cliente.apellido || "";
+        document.getElementById("telefono").value = cliente.telefono || "";
+        document.getElementById("email").value = cliente.email || "";
+
+        // El DNI no se modifica porque identifica al cliente
+        document.getElementById("DNI").readOnly = true;
+
+        tituloFormulario.textContent = "Editar cliente";
+        btnGuardar.textContent = "Guardar cambios";
+        btnCancelar.hidden = false;
+
+        formulario.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
+
+    function cancelarEdicion() {
+        modoEdicion = false;
+        formulario.reset();
+
+        document.getElementById("DNI").readOnly = false;
+
+        tituloFormulario.textContent = "Registrar cliente";
+        btnGuardar.textContent = "Registrar cliente";
+        btnCancelar.hidden = true;
+
+        ocultarMensaje();
+    }
+
+    btnCancelar.addEventListener("click", cancelarEdicion);
+
+    formulario.addEventListener("submit", async function(evento) {
+        evento.preventDefault();
+        ocultarMensaje();
+
+        const datos = new FormData(formulario);
+
+        const url = modoEdicion
+            ? "api/clientes/actualizar.php"
+            : "api/clientes/registrar.php";
+
+        btnGuardar.disabled = true;
+
+        try {
+            const respuesta = await fetch(url, {
+                method: "POST",
+                body: datos
+            });
+
+            const resultado = await respuesta.json();
+
+            if (!respuesta.ok || !resultado.success) {
+                throw new Error(
+                    resultado.message || "No se pudo guardar el cliente"
+                );
+            }
+
+            mostrarMensaje(
+                resultado.message || "Operacion realizada correctamente",
+                "exito"
+            );
+
+            cancelarEdicion();
+            await cargarClientes();
+
+        } catch (error) {
+            mostrarMensaje(error.message, "error");
+        } finally {
+            btnGuardar.disabled = false;
+        }
+    });
+
+    async function eliminarCliente(cliente, boton) {
+        const confirmar = confirm(
+            "¿Querés eliminar al cliente " +
+            cliente.nombre + " " + cliente.apellido +
+            " (DNI " + cliente.DNI + ")?\n\n" +
+            "Si tiene ventas asociadas, el sistema no permitira eliminarlo"
+        );
+
+        if (!confirmar) {
+            return;
+        }
+
+        ocultarMensaje();
+        boton.disabled = true;
+
+        try {
+            const datos = new FormData();
+            datos.append("DNI", cliente.DNI);
+
+            const respuesta = await fetch("api/clientes/eliminar.php", {
+                method: "POST",
+                body: datos
+            });
+
+            const resultado = await respuesta.json();
+
+            if (!respuesta.ok || !resultado.success) {
+                throw new Error(
+                    resultado.message || "No se pudo eliminar el cliente"
+                );
+            }
+
+            if (modoEdicion &&
+                document.getElementById("DNI").value === cliente.DNI) {
+                cancelarEdicion();
+            }
+
+            mostrarMensaje(
+                resultado.message || "Cliente eliminado correctamente",
+                "exito"
+            );
+
+            await cargarClientes();
+
+        } catch (error) {
+            mostrarMensaje(error.message, "error");
+        } finally {
+            boton.disabled = false;
+        }
+    }
+
+    cargarClientes();
+</script>
+</body>
+</html>

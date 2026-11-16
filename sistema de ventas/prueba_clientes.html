@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Consulta de clientes</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px;
+            font-family: Arial, sans-serif;
+            background: #f3f5f8;
+            color: #222;
+        }
+
+        .contenedor {
+            max-width: 1000px;
+            margin: auto;
+            padding: 25px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #103E73;
+        }
+
+        .tabla-contenedor {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #103E73;
+            color: white;
+        }
+
+        tr:hover {
+            background: #f5f8fc;
+        }
+
+        #mensaje {
+            margin-top: 15px;
+            color: #444;
+        }
+
+        .volver {
+            display: inline-block;
+            margin-top: 20px;
+            color: #103E73;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="contenedor">
+        <h1>Clientes registrados</h1>
+
+        <p>Listado de clientes obtenidos desde la API del sistema</p>
+
+        <div class="tabla-contenedor">
+            <table>
+                <thead>
+                    <tr>
+                        <th>DNI</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Telefono</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tabla-clientes">
+                    <tr>
+                        <td colspan="5">Cargando clientes...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p id="mensaje" role="status"></p>
+
+        <a class="volver" href="principal.php">
+            Volver al menu principal
+        </a>
+    </main>
+
+    <script>
+        const tabla = document.getElementById("tabla-clientes");
+        const mensaje = document.getElementById("mensaje");
+
+        async function cargarClientes() {
+            try {
+                const respuesta = await fetch(
+                    "api/clientes/listar.php"
+                );
+
+                const resultado = await respuesta.json();
+
+                if (!respuesta.ok || !resultado.success) {
+                    throw new Error(
+                        resultado.message ||
+                        "No se pudieron cargar los clientes."
+                    );
+                }
+
+                tabla.replaceChildren();
+
+                if (resultado.data.length === 0) {
+                    const fila = document.createElement("tr");
+                    const celda = document.createElement("td");
+
+                    celda.colSpan = 5;
+                    celda.textContent = "No hay clientes registrados";
+
+                    fila.appendChild(celda);
+                    tabla.appendChild(fila);
+                } else {
+                    resultado.data.forEach(function(cliente) {
+                        const fila = document.createElement("tr");
+
+                        const datos = [
+                            cliente.DNI,
+                            cliente.nombre,
+                            cliente.apellido,
+                            cliente.telefono,
+                            cliente.email
+                        ];
+
+                        datos.forEach(function(dato) {
+                            const celda = document.createElement("td");
+
+                            celda.textContent =
+                                dato === null || dato === ""
+                                    ? "—"
+                                    : dato;
+
+                            fila.appendChild(celda);
+                        });
+
+                        tabla.appendChild(fila);
+                    });
+                }
+
+                mensaje.textContent =
+                    "Clientes cargados correctamente: " +
+                    resultado.data.length;
+
+            } catch (error) {
+                tabla.replaceChildren();
+
+                const fila = document.createElement("tr");
+                const celda = document.createElement("td");
+
+                celda.colSpan = 5;
+                celda.textContent = "No se pudo cargar el listado";
+
+                fila.appendChild(celda);
+                tabla.appendChild(fila);
+
+                mensaje.textContent =
+                    "Revisa que Apache y MySQL esten funcionando " +
+                    "y que la API responda correctamente.";
+
+                console.error("Error al cargar clientes:", error);
+            }
+        }
+
+        cargarClientes();
+    </script>
+
+</body>
+</html>
