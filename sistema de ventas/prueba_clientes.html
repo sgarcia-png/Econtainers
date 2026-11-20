@@ -8,10 +8,12 @@
     <title>Consulta de clientes</title>
 
     <style>
+        /* Aplica box-sizing a todos los elementos */
         * {
             box-sizing: border-box;
         }
 
+        /* Estilos generales de la pagina */
         body {
             margin: 0;
             padding: 30px;
@@ -20,6 +22,7 @@
             color: #222;
         }
 
+        /* Contenedor principal del contenido */
         .contenedor {
             max-width: 1000px;
             margin: auto;
@@ -29,41 +32,49 @@
             box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
         }
 
+        /* Estilo del titulo principal */
         h1 {
             margin-top: 0;
             color: #103E73;
         }
 
+        /* Permite desplazarse horizontalmente si la tabla no entra en pantalla */
         .tabla-contenedor {
             overflow-x: auto;
         }
 
+        /* Estilos generales de la tabla */
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
 
+        /* Espaciado y alineacion de las celdas */
         th, td {
             padding: 12px;
             border-bottom: 1px solid #ddd;
             text-align: left;
         }
 
+        /* Estilo de los encabezados de la tabla */
         th {
             background: #103E73;
             color: white;
         }
 
+        /* Cambia el fondo de una fila cuando se pasa el cursor */
         tr:hover {
             background: #f5f8fc;
         }
 
+        /* Estilo del mensaje que muestra el resultado de la consulta */
         #mensaje {
             margin-top: 15px;
             color: #444;
         }
 
+        /* Estilo del enlace para volver al menu principal */
         .volver {
             display: inline-block;
             margin-top: 20px;
@@ -74,13 +85,16 @@
 
 <body>
 
+    <!-- Contenedor principal de la pagina -->
     <main class="contenedor">
         <h1>Clientes registrados</h1>
 
         <p>Listado de clientes obtenidos desde la API del sistema</p>
 
+        <!-- Contenedor de la tabla de clientes -->
         <div class="tabla-contenedor">
             <table>
+                <!-- Encabezados que indican los datos de cada columna -->
                 <thead>
                     <tr>
                         <th>DNI</th>
@@ -91,6 +105,7 @@
                     </tr>
                 </thead>
 
+                <!-- Cuerpo donde JavaScript va a mostrar los clientes -->
                 <tbody id="tabla-clientes">
                     <tr>
                         <td colspan="5">Cargando clientes...</td>
@@ -99,25 +114,32 @@
             </table>
         </div>
 
+        <!-- Lugar donde se muestran mensajes sobre la consulta -->
         <p id="mensaje" role="status"></p>
 
+        <!-- Enlace para regresar al menu principal -->
         <a class="volver" href="principal.php">
             Volver al menu principal
         </a>
     </main>
 
     <script>
+        // Busca el cuerpo de la tabla y el espacio para mostrar mensajes
         const tabla = document.getElementById("tabla-clientes");
         const mensaje = document.getElementById("mensaje");
 
+        // Funcion que consulta la API y muestra los clientes
         async function cargarClientes() {
             try {
+                // Solicita los datos a la API que lista los clientes
                 const respuesta = await fetch(
                     "api/clientes/listar.php"
                 );
 
+                // Convierte la respuesta recibida en formato JSON
                 const resultado = await respuesta.json();
 
+                // Comprueba si la respuesta tiene un error o la API indica que fallo
                 if (!respuesta.ok || !resultado.success) {
                     throw new Error(
                         resultado.message ||
@@ -125,21 +147,27 @@
                     );
                 }
 
+                // Limpia el contenido anterior de la tabla
                 tabla.replaceChildren();
 
+                // Comprueba si la API devolvio una lista sin clientes
                 if (resultado.data.length === 0) {
                     const fila = document.createElement("tr");
                     const celda = document.createElement("td");
 
+                    // La celda ocupa las cinco columnas de la tabla
                     celda.colSpan = 5;
                     celda.textContent = "No hay clientes registrados";
 
+                    // Agrega la celda a la fila y la fila a la tabla
                     fila.appendChild(celda);
                     tabla.appendChild(fila);
                 } else {
+                    // Recorre la lista y crea una fila para cada cliente
                     resultado.data.forEach(function(cliente) {
                         const fila = document.createElement("tr");
 
+                        // Guarda los datos del cliente que se van a mostrar
                         const datos = [
                             cliente.DNI,
                             cliente.nombre,
@@ -148,45 +176,56 @@
                             cliente.email
                         ];
 
+                        // Recorre los datos para crear las celdas de la fila
                         datos.forEach(function(dato) {
                             const celda = document.createElement("td");
 
+                            // Si un dato esta vacio o es null, muestra un guion
                             celda.textContent =
                                 dato === null || dato === ""
                                     ? "—"
                                     : dato;
 
+                            // Agrega la celda a la fila
                             fila.appendChild(celda);
                         });
 
+                        // Agrega la fila completa al cuerpo de la tabla
                         tabla.appendChild(fila);
                     });
                 }
 
+                // Informa cuantos clientes se cargaron correctamente
                 mensaje.textContent =
                     "Clientes cargados correctamente: " +
                     resultado.data.length;
 
             } catch (error) {
+                // Si ocurre un error, limpia el contenido de la tabla
                 tabla.replaceChildren();
 
                 const fila = document.createElement("tr");
                 const celda = document.createElement("td");
 
+                // Muestra un mensaje dentro de la tabla
                 celda.colSpan = 5;
                 celda.textContent = "No se pudo cargar el listado";
 
+                // Agrega el mensaje de error a la tabla
                 fila.appendChild(celda);
                 tabla.appendChild(fila);
 
+                // Informa posibles causas del problema
                 mensaje.textContent =
                     "Revisa que Apache y MySQL esten funcionando " +
                     "y que la API responda correctamente.";
 
+                // Muestra el error en la consola del navegador
                 console.error("Error al cargar clientes:", error);
             }
         }
 
+        // Ejecuta la funcion al cargar la pagina
         cargarClientes();
     </script>
 

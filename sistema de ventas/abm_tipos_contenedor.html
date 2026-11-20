@@ -2,16 +2,22 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- Configuracion general de la pagina -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ABM de tipos de contenedores</title>
+
+    <!-- Conectar la hoja de estilos general del sistema -->
     <link rel="stylesheet" href="estilos.css">
 
+    <!-- Estilos propios de esta pantalla -->
     <style>
+        /* Aplicar el mismo calculo de tamaño a todos los elementos */
         * {
             box-sizing: border-box;
         }
 
+        /* Estilos generales del cuerpo de la pagina */
         body {
             margin: 0;
             padding: 25px;
@@ -20,21 +26,25 @@
             color: #222;
         }
 
+        /* Limitar el ancho del contenido y centrarlo */
         .contenedor {
             max-width: 950px;
             margin: 0 auto;
         }
 
+        /* Estilo del titulo principal */
         h1 {
             color: #103e73;
             margin-bottom: 8px;
         }
 
+        /* Estilo de los textos descriptivos */
         .descripcion {
             color: #555;
             margin-bottom: 25px;
         }
 
+        /* Apariencia de los paneles blancos */
         .panel {
             background: white;
             padding: 22px;
@@ -43,6 +53,7 @@
             box-shadow: 0 2px 8px #00000010;
         }
 
+        /* Estilo de las etiquetas de los campos */
         label {
             display: block;
             font-weight: bold;
@@ -50,6 +61,7 @@
             margin-bottom: 6px;
         }
 
+        /* Estilo de los campos para ingresar y seleccionar datos */
         input, select {
             width: 100%;
             padding: 11px;
@@ -58,6 +70,7 @@
             font-size: 15px;
         }
 
+        /* Estilo general de los botones */
         button {
             border: none;
             border-radius: 5px;
@@ -67,28 +80,33 @@
             margin: 5px 4px 0 0;
         }
 
+        /* Boton para guardar los datos */
         .guardar {
             background: #103e73;
             color: white;
             margin-top: 18px;
         }
 
+        /* Boton para cancelar la edicion */
         .cancelar {
             background: #777;
             color: white;
             margin-top: 18px;
         }
 
+        /* Boton para editar un tipo */
         .editar {
             background: #f6a623;
             color: #222;
         }
 
+        /* Boton para eliminar un tipo */
         .eliminar {
             background: #e30613;
             color: white;
         }
 
+        /* Estilo del enlace para volver al menu */
         .volver {
             display: inline-block;
             margin-bottom: 20px;
@@ -97,38 +115,45 @@
             font-weight: bold;
         }
 
+        /* Estilo de los mensajes que aparecen en pantalla */
         .mensaje {
             margin-top: 15px;
             font-weight: bold;
         }
 
+        /* Permitir el desplazamiento horizontal de la tabla si hace falta */
         .tabla-contenedor {
             overflow-x: auto;
         }
 
+        /* Estilos generales de la tabla */
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
         }
 
+        /* Espaciado y separacion de las celdas */
         th, td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
 
+        /* Estilo de los encabezados de la tabla */
         th {
             background: #103e73;
             color: white;
         }
 
+        /* Estilo de las notas debajo del formulario */
         .nota {
             color: #555;
             font-size: 14px;
             margin-top: 12px;
         }
 
+        /* Adaptar la pantalla a dispositivos con pantallas pequeñas */
         @media (max-width: 600px) {
             body {
                 padding: 12px;
@@ -143,8 +168,10 @@
 
 <body class="principal-body">
 
+    <!-- Contenido principal de la pantalla -->
     <main class="contenido-principal">
 
+        <!-- Encabezado con el titulo y el enlace para volver -->
         <div class="ventas-encabezado">
 
             <div>
@@ -155,6 +182,7 @@
                 </p>
             </div>
 
+            <!-- Volver al menu principal del sistema -->
             <a href="principal.php" class="boton-volver">
                 Volver al inicio
             </a>
@@ -163,14 +191,19 @@
 
         <div class="contenedor">
 
+    <!-- Panel del formulario: comienza oculto y se muestra al registrar o editar -->
     <div class="panel" id="panelEditar" style="display: none;">
         <h2 id="tituloFormulario">Registrar tipo de contenedor</h2>
 
+        <!-- Formulario para registrar o modificar un tipo -->
         <form id="formulario">
+
+            <!-- Guardar el identificador del tipo cuando se esta editando -->
             <input type="hidden" id="id_tipo">
 
             <label for="nombre_tipo">Tipo de contenedor</label>
             
+            <!-- El contenido de este selector se carga desde la API -->
             <select id="nombre_tipo" required>
             </select>
 
@@ -184,23 +217,28 @@
                 placeholder="Ingresa el valor"
             >
 
+            <!-- Boton que envia el formulario -->
             <button type="submit" class="guardar" id="botonGuardar">
                 Registrar tipo
             </button>
 
+            <!-- Boton que cancela la edicion -->
             <button type="button" class="cancelar" id="botonCancelar" hidden>
                 Cancelar edicion
             </button>
 
+            <!-- Lugar donde se muestran los mensajes del formulario -->
             <div id="mensajeFormulario" class="mensaje" role="status"></div>
         </form>
 
+        <!-- Aclaraciones sobre los tipos y los valores permitidos -->
         <p class="nota">
             Solo se permiten 20 pies, 40 pies, 40 pies HC y reefer
             El valor debe ser mayor que cero
         </p>
     </div>
 
+    <!-- Panel que contiene la tabla de tipos registrados -->
     <div class="panel">
         <h2>Tipos registrados</h2>
 
@@ -214,6 +252,8 @@
                         <th>Acciones</th>
                     </tr>
                 </thead>
+
+                <!-- JavaScript coloca las filas de la tabla en este lugar -->
                 <tbody id="tablaTipos">
                     <tr>
                         <td colspan="4">Cargando tipos...</td>
@@ -222,6 +262,7 @@
             </table>
         </div>
 
+        <!-- Lugar donde se muestran los mensajes del listado -->
         <div id="mensajeListado" class="mensaje" role="status"></div>
     </div>
 
@@ -229,7 +270,9 @@
         </div>
     </main>
 
+<!-- Codigo JavaScript que controla el formulario y la tabla -->
 <script>
+    // Obtener los elementos HTML que se van a utilizar
     const formulario = document.getElementById("formulario");
     const campoId = document.getElementById("id_tipo");
     const campoNombre = document.getElementById("nombre_tipo");
@@ -248,6 +291,8 @@
 
     // Consultar la API y mostrar los tipos registrados
     async function cargarTipos() {
+
+        // Mostrar un mensaje mientras se consultan los datos
         tablaTipos.replaceChildren();
         const filaCarga = document.createElement("tr");
         const celdaCarga = document.createElement("td");
@@ -257,19 +302,24 @@
         tablaTipos.appendChild(filaCarga);
 
         try {
+            // Solicitar los tipos registrados al archivo PHP
             const respuesta = await fetch("api/tipos_contenedor.php");
             const resultado = await respuesta.json();
 
+            // Comprobar si la consulta fue correcta
             if (!respuesta.ok || !resultado.ok) {
                 throw new Error(
                     resultado.mensaje || "No se pudieron consultar los tipos"
                 );
             }
 
+            // Obtener el selector donde se cargaran los tipos
             var selector = document.getElementById("nombre_tipo");
 
+            // Limpiar la tabla antes de cargar los nuevos resultados
             tablaTipos.replaceChildren();
 
+            // Comprobar si la API devolvio algun tipo
             if (resultado.datos.length === 0) {
                 const fila = document.createElement("tr");
                 const celda = document.createElement("td");
@@ -281,35 +331,46 @@
                 return;
             }
 
+            // Recorrer cada tipo recibido desde la API
             resultado.datos.forEach(function(tipo) {
                 //cargamos selector de tipos de contenedores
                  // <option value="5">20 pies</option>
+
+                // Crear una opcion para el selector con los datos del tipo
                 var option = document.createElement("option");
                 option.value = tipo.id_tipo;
                 option.innerHTML = tipo.nombre_tipo;
                 selector.appendChild(option);
                 
+                // Crear una nueva fila para la tabla
                 const fila = document.createElement("tr");
 
+                // Crear una celda para el identificador del tipo
                 const celdaId = document.createElement("td");
                 celdaId.textContent = tipo.id_tipo;
                 celdaId.style.display = "none";
 
+                // Mostrar el nombre del tipo
                 const celdaNombre = document.createElement("td");
                 celdaNombre.textContent = tipo.nombre_tipo;
 
+                // Mostrar el valor con formato de moneda
                 const celdaValor = document.createElement("td");
                 celdaValor.textContent = "$ " + Number(tipo.valor).toLocaleString(
                     "es-AR",
                     { minimumFractionDigits: 2, maximumFractionDigits: 2 }
                 );
 
+                // Crear la celda donde se colocan los botones de acciones
                 const celdaAcciones = document.createElement("td");
 
+                // Crear el boton para editar el tipo
                 const botonEditar = document.createElement("button");
                 botonEditar.type = "button";
                 botonEditar.className = "editar";
                 botonEditar.textContent = "Editar";
+
+                // Al hacer clic, abrir el formulario con los datos del tipo
                 botonEditar.addEventListener("click", function() {
                     editarTipo(tipo);
                 });
@@ -322,14 +383,17 @@
                     eliminarTipo(tipo.id_tipo, tipo.nombre_tipo);
                 });*/
 
+                // Agregar el boton de editar a la celda y la fila a la tabla
                 celdaAcciones.append(botonEditar);
                 fila.append(celdaId, celdaNombre, celdaValor, celdaAcciones);
                 tablaTipos.appendChild(fila);
             });
 
+            // Borrar mensajes anteriores si la consulta fue correcta
             mostrarMensaje(mensajeListado, "");
 
         } catch (error) {
+            // Mostrar un mensaje en la tabla si ocurre un error
             tablaTipos.replaceChildren();
 
             const fila = document.createElement("tr");
@@ -345,55 +409,72 @@
 
     // Preparar el formulario para editar un tipo
     function editarTipo(tipo) {
+        // Mostrar el panel del formulario
         var panelEditar = document.getElementById("panelEditar");
         panelEditar.style.display = "block";
+
+        // Colocar los datos del tipo seleccionado en los campos
         campoId.value = tipo.id_tipo;
         campoNombre.value = tipo.id_tipo;// tipo.nombre_tipo;
         campoNombre.disabled = true;
         campoValor.value = tipo.valor;
 
+        // Cambiar los textos para indicar que se esta modificando un tipo
         tituloFormulario.textContent = "Modificar tipo de contenedor";
         botonGuardar.textContent = "Guardar cambios";
         botonCancelar.hidden = false;
 
+        // Limpiar mensajes anteriores y llevar el formulario a la vista
         mostrarMensaje(mensajeFormulario, "");
         formulario.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     // Limpiar el formulario y volver al modo de registro
     function limpiarFormulario() {
+        // Restablecer los campos y los textos originales
         formulario.reset();
         campoId.value = "";
         tituloFormulario.textContent = "Registrar tipo de contenedor";
         botonGuardar.textContent = "Registrar tipo";
         botonCancelar.hidden = true;
+
+        // Ocultar el panel del formulario
         document.getElementById("panelEditar").style.display = "none";
+
         mostrarMensaje(mensajeFormulario, "");
     }
 
+    // Ejecutar la limpieza cuando se presiona el boton Cancelar
     botonCancelar.addEventListener("click", limpiarFormulario);
 
     // Registrar o modificar segun el modo del formulario
     formulario.addEventListener("submit", async function(evento) {
+
+        // Evitar que el formulario se envie de la forma tradicional
         evento.preventDefault();
 
+        // Obtener el identificador y los datos ingresados
         const id = campoId.value;
         const datos = {
             nombre_tipo: campoNombre.value,
             valor: campoValor.value
         };
 
+        // Por defecto, utilizar el archivo PHP para registrar
         let archivo = "api/tipos_contenedor_registrar.php";
 
+        // Si hay un identificador, se trata de una modificacion
         if (id !== "") {
             archivo = "api/tipos_contenedor_actualizar.php";
             datos.id_tipo = id;
         }
 
+        // Deshabilitar el boton mientras se guardan los datos
         botonGuardar.disabled = true;
         mostrarMensaje(mensajeFormulario, "Guardando...");
 
         try {
+            // Enviar los datos a la API mediante el metodo POST
             const respuesta = await fetch(archivo, {
                 method: "POST",
                 headers: {
@@ -402,14 +483,17 @@
                 body: JSON.stringify(datos)
             });
 
+            // Leer la respuesta enviada por PHP
             const resultado = await respuesta.json();
 
+            // Comprobar si el registro o la modificacion fueron correctos
             if (!respuesta.ok || !resultado.ok) {
                 throw new Error(
                     resultado.mensaje || "No se pudo guardar el tipo"
                 );
             }
 
+            // Mostrar el resultado y actualizar la tabla
             mostrarMensaje(mensajeFormulario, resultado.mensaje);
             limpiarFormulario();
             await cargarTipos();
@@ -417,18 +501,22 @@
             mostrarMensaje(mensajeFormulario, resultado.mensaje);
 
         } catch (error) {
+            // Mostrar el error si no se pudieron guardar los datos
             mostrarMensaje(mensajeFormulario, error.message);
         } finally {
+            // Volver a habilitar el boton al terminar el proceso
             botonGuardar.disabled = false;
         }
     });
 
     // Eliminar un tipo si no esta siendo utilizado
     async function eliminarTipo(id, nombre) {
+        // Pedir confirmacion antes de eliminar
         const confirmar = confirm(
             "¿Seguro que queres eliminar el tipo " + nombre + "?"
         );
 
+        // Si se cancela, no continuar
         if (!confirmar) {
             return;
         }
@@ -436,6 +524,7 @@
         mostrarMensaje(mensajeListado, "Eliminando...");
 
         try {
+            // Enviar el identificador del tipo al archivo PHP
             const respuesta = await fetch("api/tipos_contenedor_eliminar.php", {
                 method: "POST",
                 headers: {
@@ -444,19 +533,23 @@
                 body: JSON.stringify({ id_tipo: id })
             });
 
+            // Leer la respuesta de la API
             const resultado = await respuesta.json();
 
+            // Comprobar si la eliminacion fue correcta
             if (!respuesta.ok || !resultado.ok) {
                 throw new Error(
                     resultado.mensaje || "No se pudo eliminar el tipo"
                 );
             }
 
+            // Actualizar la pantalla despues de eliminar
             limpiarFormulario();
             await cargarTipos();
             mostrarMensaje(mensajeListado, resultado.mensaje);
 
         } catch (error) {
+            // Mostrar el error si no se pudo eliminar el tipo
             mostrarMensaje(mensajeListado, error.message);
         }
     }

@@ -1,23 +1,31 @@
+
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
 
+    <!-- Define la codificacion de caracteres de la pagina -->
     <meta charset="UTF-8">
 
+    <!-- Adapta el ancho de la pagina al dispositivo utilizado -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- Titulo que aparece en la pestaña del navegador -->
     <title>Sistema de Ventas - Inicio de sesion</title>
 
+    <!-- Conecta la pagina con la hoja de estilos CSS -->
     <link rel="stylesheet" href="estilos.css">
 
 </head>
 
+<!-- Clase que permite aplicar los estilos de la pantalla de inicio de sesion -->
 <body class="login-body">
 
+    <!-- Contenedor principal del formulario de inicio de sesion -->
     <main class="login-contenedor">
 
         <!-- LOGO DE LA EMPRESA -->
+        <!-- Muestra el logo de ECONTAINERS -->
         <img
             src="img/logo.png"
             alt="ECONTAINERS"
@@ -25,21 +33,26 @@
         >
 
         <!-- TITULO -->
+        <!-- Muestra el nombre del sistema -->
         <h1 class="login-titulo">
             Sistema de Ventas
         </h1>
 
+        <!-- Texto que explica para que sirve esta pantalla -->
         <p class="login-subtitulo">
             Ingreso al sistema de gestion de ventas
         </p>
 
         <!-- FORMULARIO DE INICIO DE SESION -->
+        <!-- Contiene los campos para ingresar el usuario y la contraseña -->
         <form class="login-formulario">
 
+            <!-- Etiqueta del campo de usuario -->
             <label for="usuario">
                 Usuario
             </label>
 
+            <!-- Campo donde se escribe el nombre de usuario -->
             <input
                 type="text"
                 id="usuario"
@@ -47,10 +60,12 @@
                 placeholder="Ingrese su usuario"
             >
 
+            <!-- Etiqueta del campo de contraseña -->
             <label for="contrasena">
                 Contraseña
             </label>
 
+            <!-- Campo donde se escribe la contraseña sin mostrar sus caracteres -->
             <input
                 type="password"
                 id="contrasena"
@@ -58,6 +73,7 @@
                 placeholder="Ingrese su contraseña"
             >
 
+            <!-- Boton para enviar el formulario -->
             <button
                 type="submit"
                 class="boton-principal"
@@ -67,6 +83,7 @@
 
         </form>
 
+        <!-- Texto que aparece en la parte inferior del formulario -->
         <p class="login-pie">
             ECONTAINERS - Sistema de Ventas
         </p>
@@ -74,5 +91,4 @@
     </main>
 
 </body>
-
 </html>

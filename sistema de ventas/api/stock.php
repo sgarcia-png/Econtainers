@@ -1,11 +1,15 @@
+
 <?php
 
+// Indicar que la respuesta del archivo sera en formato JSON.
 header("Content-Type: application/json; charset=utf-8");
 
+// Incluir el archivo que permite conectarse a la base de datos.
 require_once __DIR__ . "/../config/conexion.php";
 
 try {
 
+    // Consultar los contenedores y relacionarlos con sus tipos.
     $consulta = $conexion->query(
         "SELECT
             c.codigo,
@@ -20,12 +24,15 @@ try {
          ORDER BY c.codigo"
     );
 
+    // Crear un arreglo vacio para guardar los contenedores encontrados.
     $contenedores = [];
 
+    // Recorrer los resultados de la consulta y guardar cada contenedor.
     while ($fila = $consulta->fetch_assoc()) {
         $contenedores[] = $fila;
     }
 
+    // Enviar los datos obtenidos en formato JSON.
     echo json_encode(
         [
             "ok" => true,
@@ -36,10 +43,13 @@ try {
 
 } catch (mysqli_sql_exception $e) {
 
+    // Guardar los detalles del error en el registro del servidor.
     error_log("Error al consultar el stock: " . $e->getMessage());
 
+    // Indicar que ocurrio un error interno en el servidor.
     http_response_code(500);
 
+    // Enviar un mensaje para informar que no se pudo consultar el stock.
     echo json_encode(
         [
             "ok" => false,

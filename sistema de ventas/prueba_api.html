@@ -10,63 +10,82 @@
 
 <body>
 
+    <!-- Primera prueba: consultar los tipos de contenedores -->
     <h1>Tipos de contenedores</h1>
 
     <p>Datos obtenidos desde la base de datos MySQL:</p>
 
+    <!-- Boton que ejecuta la funcion para consultar los tipos -->
     <button onclick="cargarTipos()">Consultar contenedores</button>
 
+    <!-- Espacio donde se muestran los resultados de la consulta -->
     <div id="resultado">
         Presiona el boton para consultar los datos
     </div>
 
     <script>
+        // Funcion que consulta los tipos de contenedores en la API
         function cargarTipos() {
 
+            // Busca el elemento donde se van a mostrar los resultados
             const resultado = document.getElementById("resultado");
 
+            // Informa que la consulta se esta realizando
             resultado.textContent = "Cargando datos...";
 
+            // Solicita los tipos de contenedores al archivo PHP
             fetch("api/tipos_contenedor.php")
                 .then(function (respuesta) {
 
+                    // Comprueba si la respuesta del servidor fue correcta
                     if (!respuesta.ok) {
                         throw new Error("No se pudo consultar la API");
                     }
 
+                    // Convierte la respuesta recibida en formato JSON
                     return respuesta.json();
                 })
                 .then(function (datos) {
 
+                    // Comprueba si la API informa que ocurrio un error
                     if (!datos.ok) {
                         throw new Error(datos.mensaje || "Ocurrio un error");
                     }
 
+                    // Limpia los resultados anteriores
                     resultado.replaceChildren();
 
+                    // Comprueba si hay tipos de contenedores registrados
                     if (datos.datos.length === 0) {
                         resultado.textContent =
                             "No hay tipos de contenedores registrados";
                         return;
                     }
 
+                    // Crea una lista para mostrar los tipos de contenedores
                     const lista = document.createElement("ul");
 
+                    // Recorre todos los tipos recibidos desde la API
                     datos.datos.forEach(function (tipo) {
 
+                        // Crea un elemento para cada tipo
                         const elemento = document.createElement("li");
 
+                        // Muestra el nombre y el valor del tipo de contenedor
                         elemento.textContent =
                             tipo.nombre_tipo + " - Valor: $" + tipo.valor;
 
+                        // Agrega el elemento a la lista
                         lista.appendChild(elemento);
                     });
 
+                    // Agrega la lista completa al espacio de resultados
                     resultado.appendChild(lista);
 
                 })
                 .catch(function (error) {
 
+                    // Muestra un mensaje si ocurre un error en la consulta
                     resultado.textContent =
                         "Error al consultar los datos: " + error.message;
                 });
@@ -75,46 +94,60 @@
 
     <hr>
 
+    <!-- Segunda prueba: consultar las ventas registradas -->
     <h2>Ventas registradas</h2>
 
+    <!-- Boton que ejecuta la funcion para consultar las ventas -->
     <button onclick="cargarVentas()">Consultar ventas</button>
 
+    <!-- Espacio donde se muestra el listado de ventas -->
     <div id="resultadoVentas">
         Presiona el boton para consultar las ventas
     </div>
 
     <script>
+        // Funcion que consulta las ventas registradas en la API
         function cargarVentas() {
 
+            // Busca el elemento donde se mostraran las ventas
             const resultado = document.getElementById("resultadoVentas");
 
+            // Informa que se estan cargando las ventas
             resultado.textContent = "Cargando ventas...";
 
+            // Solicita el listado de ventas al archivo PHP
             fetch("api/ventas.php")
                 .then(function (respuesta) {
 
+                    // Comprueba si la respuesta del servidor fue correcta
                     if (!respuesta.ok) {
                         throw new Error("No se pudo consultar la API de ventas");
                     }
 
+                    // Convierte la respuesta en formato JSON
                     return respuesta.json();
                 })
                 .then(function (datos) {
 
+                    // Comprueba si la API informa que ocurrio un error
                     if (!datos.ok) {
                         throw new Error(datos.mensaje || "Ocurrio un error");
                     }
 
+                    // Limpia los resultados anteriores
                     resultado.replaceChildren();
 
+                    // Comprueba si existen ventas registradas
                     if (datos.datos.length === 0) {
                         resultado.textContent = "No hay ventas registradas";
                         return;
                     }
 
+                    // Crea la tabla y una fila para los encabezados
                     const tabla = document.createElement("table");
                     const encabezado = document.createElement("tr");
 
+                    // Define los nombres de las columnas de la tabla
                     const columnas = [
                         "N.º Venta",
                         "Fecha",
@@ -123,18 +156,23 @@
                         "DNI del cliente"
                     ];
 
+                    // Recorre los nombres y crea una celda para cada encabezado
                     columnas.forEach(function (columna) {
                         const th = document.createElement("th");
                         th.textContent = columna;
                         encabezado.appendChild(th);
                     });
 
+                    // Agrega la fila de encabezados a la tabla
                     tabla.appendChild(encabezado);
 
+                    // Recorre todas las ventas recibidas desde la API
                     datos.datos.forEach(function (venta) {
 
+                        // Crea una fila para cada venta
                         const fila = document.createElement("tr");
 
+                        // Recorre los datos de la venta para crear sus celdas
                         [
                             venta.nro_venta,
                             venta.fecha,
@@ -143,18 +181,24 @@
                             venta.dni_cliente
                         ].forEach(function (valor) {
 
+                            // Crea una celda para cada dato
                             const celda = document.createElement("td");
+
+                            // Muestra el dato o un texto vacio si es null
                             celda.textContent = valor ?? "";
                             fila.appendChild(celda);
                         });
 
+                        // Agrega la fila completa a la tabla
                         tabla.appendChild(fila);
                     });
 
+                    // Muestra la tabla con las ventas en la pagina
                     resultado.appendChild(tabla);
                 })
                 .catch(function (error) {
 
+                    // Informa si ocurre un error al consultar las ventas
                     resultado.textContent =
                         "Error al consultar las ventas: " + error.message;
                 });
@@ -163,11 +207,13 @@
 
 <hr>
 
+<!-- Tercera prueba: registrar una venta nueva -->
 <h2>Registrar una venta de prueba</h2>
 
 <p>Esta prueba registrara una venta nueva utilizando un cliente
 y un contenedor que este disponible.</p>
 
+<!-- Campo para ingresar el DNI del cliente -->
 <label for="dni_cliente">DNI del cliente:</label>
 <br>
 <input
@@ -177,6 +223,7 @@ y un contenedor que este disponible.</p>
 >
 <br><br>
 
+<!-- Campo para ingresar el codigo del contenedor -->
 <label for="codigo_contenedor">Codigo del contenedor:</label>
 <br>
 <input
@@ -186,55 +233,71 @@ y un contenedor que este disponible.</p>
 >
 <br><br>
 
+<!-- Campo para seleccionar la fecha de la venta -->
 <label for="fecha_venta">Fecha de la venta:</label>
 <br>
 <input type="date" id="fecha_venta">
 <br><br>
 
+<!-- Boton que inicia el registro de la venta -->
 <button type="button" id="btnRegistrarVenta">
     Registrar venta de prueba
 </button>
 
+<!-- Espacio donde se muestra el resultado del registro -->
 <p id="resultadoRegistro"></p>
 
 <script>
+// Espera a que el contenido de la pagina este cargado
 document.addEventListener("DOMContentLoaded", function () {
 
+    // Busca el boton y el espacio donde se mostraran los resultados
     const boton = document.getElementById("btnRegistrarVenta");
     const resultado = document.getElementById("resultadoRegistro");
 
+    // Ejecuta esta funcion cuando se hace clic en el boton
     boton.addEventListener("click", async function () {
 
+        // Obtiene el DNI, el codigo y la fecha ingresados
         const dni = document.getElementById("dni_cliente").value.trim();
         const codigo = document.getElementById("codigo_contenedor").value.trim();
         const fecha = document.getElementById("fecha_venta").value;
 
+        // Comprueba que los tres campos tengan informacion
         if (!dni || !codigo || !fecha) {
             resultado.textContent = "Completa el DNI, el codigo y la fecha.";
             return;
         }
 
+        // Pide confirmacion antes de intentar guardar una venta real
         const confirmar = confirm(
             "Se intentara registrar una venta real en la base de datos. ¿Queres continuar?"
         );
 
+        // Si el usuario cancela, se detiene el registro
         if (!confirmar) {
             return;
         }
 
+        // Desactiva el boton para evitar varios envios al mismo tiempo
         boton.disabled = true;
         resultado.textContent = "Registrando venta...";
 
         try {
 
+            // Envia los datos a la API encargada de registrar las ventas
             const respuesta = await fetch("api/registrar_venta.php", {
+                // Indica que se enviaran datos mediante el metodo POST
                 method: "POST",
+                // Indica que los datos se envian en formato JSON
                 headers: {
                     "Content-Type": "application/json"
                 },
+                // Convierte los datos en JSON para enviarlos a PHP
                 body: JSON.stringify({
                     dni_cliente: dni,
                     fecha: fecha,
+                    // Envia el contenedor dentro de una lista
                     contenedores: [
                         {
                             codigo: codigo
@@ -243,8 +306,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 })
             });
 
+            // Convierte la respuesta de la API en datos JSON
             const datos = await respuesta.json();
 
+            // Comprueba si la respuesta HTTP o la API indican un error
             if (!respuesta.ok || !datos.ok) {
                 resultado.textContent =
                     "No se pudo registrar: " +
@@ -252,23 +317,28 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
+            // Muestra el mensaje, el numero de venta y el total registrado
             resultado.textContent =
                 datos.mensaje +
                 " Número de venta: " + datos.datos.nro_venta +
                 ". Total: $" +
                 Number(datos.datos.monto_total).toLocaleString("es-AR", {
+                    // Muestra siempre dos decimales
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2
                 });
 
         } catch (error) {
 
+            // Informa si no se pudo conectar o procesar la respuesta de la API
             resultado.textContent =
                 "No se pudo conectar con la API. Revisa que Apache este iniciado.";
 
+            // Muestra el error en la consola del navegador
             console.error(error);
 
         } finally {
+            // Vuelve a activar el boton aunque el registro haya fallado
             boton.disabled = false;
         }
     });

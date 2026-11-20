@@ -8,15 +8,19 @@
 
     <title>Reporte de ventas por estado de pago</title>
 
+    <!-- Conectar la hoja de estilos principal -->
     <link rel="stylesheet" href="estilos.css">
 
+    <!-- Estilos propios de esta pagina -->
     <style>
+        /* Definir el espacio y el ancho del reporte */
         .reporte {
             max-width: 1100px;
             margin: 30px auto;
             padding: 20px;
         }
 
+        /* Organizar los filtros y el resumen */
         .filtros, .resumen {
             display: flex;
             flex-wrap: wrap;
@@ -28,17 +32,20 @@
             margin-bottom: 20px;
         }
 
+        /* Dar espacio a cada campo */
         .campo {
             flex: 1;
             min-width: 200px;
         }
 
+        /* Dar formato a las etiquetas */
         .campo label {
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
         }
 
+        /* Dar formato al selector de estado */
         .campo select {
             width: 100%;
             padding: 10px;
@@ -46,6 +53,7 @@
             border-radius: 5px;
         }
 
+        /* Dar formato a los botones */
         button {
             padding: 11px 18px;
             background: #103E73;
@@ -55,11 +63,13 @@
             cursor: pointer;
         }
 
+        /* Cambiar el aspecto del boton cuando esta desactivado */
         button:disabled {
             opacity: 0.6;
             cursor: not-allowed;
         }
 
+        /* Dar formato a cada dato del resumen */
         .dato {
             flex: 1;
             min-width: 180px;
@@ -67,36 +77,43 @@
             padding: 12px;
         }
 
+        /* Dar color a los titulos del resumen */
         .dato h3 {
             color: #103E73;
         }
 
+        /* Dar formato a los valores del resumen */
         .dato p {
             font-size: 22px;
             font-weight: bold;
         }
 
+        /* Permitir desplazamiento horizontal de la tabla */
         .tabla-contenedor {
             overflow-x: auto;
         }
 
+        /* Dar formato general a la tabla */
         table {
             width: 100%;
             border-collapse: collapse;
             background: white;
         }
 
+        /* Dar formato a las celdas y encabezados */
         th, td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
 
+        /* Dar formato a los encabezados de la tabla */
         th {
             background: #103E73;
             color: white;
         }
 
+        /* Dar formato al enlace para volver */
         .volver {
             display: inline-block;
             margin-bottom: 20px;
@@ -105,14 +122,17 @@
             font-weight: bold;
         }
 
+        /* Dar espacio al mensaje del reporte */
         #mensaje {
             margin: 15px 0;
         }
     </style>
 </head>
 
+<!-- Cuerpo de la pagina -->
 <body class="principal-body">
 
+    <!-- Encabezado con el logo y el usuario -->
     <header class="encabezado">
         <img src="img/logo.png" alt="ECONTAINERS" class="encabezado-logo">
 
@@ -121,13 +141,15 @@
         </div>
     </header>
 
+    <!-- Contenido principal del reporte -->
     <main class="contenido-principal">
 
+    <!-- Titulo, descripcion y boton para volver -->
     <div class="ventas-encabezado">
 
         <div>
             <h1 class="titulo-principal">
-                Reporte de ventas por fecha
+                Reporte de ventas por estado de pago
             </h1>
 
             <p class="descripcion-principal">
@@ -135,17 +157,20 @@
             </p>
         </div>
 
+        <!-- Volver al menu principal -->
         <a href="principal.php" class="boton-volver">
             Volver al inicio
         </a>
 
     </div>
 
+        <!-- Formulario para seleccionar el estado de pago -->
         <form id="formulario" class="filtros">
 
             <div class="campo">
                 <label for="estado">Estado de pago</label>
 
+                <!-- Opciones disponibles para filtrar las ventas -->
                 <select id="estado">
                     <option value="">Todas las ventas</option>
                     <option value="Pendiente">Pendientes</option>
@@ -154,16 +179,19 @@
                 </select>
             </div>
 
+            <!-- Boton para iniciar la consulta -->
             <button type="submit" id="botonBuscar">
                 Buscar ventas
             </button>
 
         </form>
 
+        <!-- Lugar donde se muestran los mensajes -->
         <p id="mensaje" aria-live="polite">
             Selecciona un filtro para consultar las ventas
         </p>
 
+        <!-- Resumen de la cantidad de ventas y sus importes -->
         <section class="resumen">
 
             <div class="dato">
@@ -178,6 +206,7 @@
 
         </section>
 
+        <!-- Tabla donde se muestran las ventas encontradas -->
         <div class="tabla-contenedor">
             <table>
                 <thead>
@@ -190,6 +219,7 @@
                     </tr>
                 </thead>
 
+                <!-- Los datos se agregan desde JavaScript -->
                 <tbody id="tabla">
                     <tr>
                         <td colspan="5">Realiza una consulta</td>
@@ -200,7 +230,9 @@
 
     </main>
 
+    <!-- Codigo JavaScript para consultar y mostrar las ventas -->
     <script>
+        // Obtener los elementos de la pagina
         const formulario = document.getElementById("formulario");
         const estado = document.getElementById("estado");
         const botonBuscar = document.getElementById("botonBuscar");
@@ -209,12 +241,14 @@
         const total = document.getElementById("total");
         const tabla = document.getElementById("tabla");
 
+        // Crear una celda de tabla con el valor recibido
         function crearCelda(valor) {
             const celda = document.createElement("td");
             celda.textContent = valor ?? "";
             return celda;
         }
 
+        // Convertir un importe al formato de moneda argentina
         function mostrarMonto(valor) {
             return Number(valor).toLocaleString("es-AR", {
                 style: "currency",
@@ -223,58 +257,85 @@
             });
         }
 
+        // Detectar cuando se envia el formulario
         formulario.addEventListener("submit", async function(evento) {
+            // Evitar que la pagina se recargue
             evento.preventDefault();
 
+            // Desactivar el boton mientras se realiza la consulta
             botonBuscar.disabled = true;
+
+            // Mostrar un mensaje mientras se buscan las ventas
             mensaje.textContent = "Consultando ventas...";
+
+            // Limpiar los resultados anteriores de la tabla
             tabla.replaceChildren();
 
             try {
+                // Preparar el estado seleccionado para enviarlo a PHP
                 const parametros = new URLSearchParams({
                     estado: estado.value
                 });
 
+                // Enviar el estado seleccionado a la API mediante GET
                 const respuesta = await fetch(
                     "api/reporte_ventas_estado.php?" + parametros.toString(),
                     {
+                        // Indicar que se espera recibir una respuesta JSON
                         headers: {
                             "Accept": "application/json"
                         },
+
+                        // Evitar utilizar una respuesta guardada en cache
                         cache: "no-store"
                     }
                 );
 
+                // Convertir la respuesta recibida a formato JSON
                 const resultado = await respuesta.json();
 
+                // Comprobar si la consulta tuvo algun error
                 if (!respuesta.ok || !resultado.ok) {
                     throw new Error(
                         resultado.mensaje || "No se pudo generar el reporte"
                     );
                 }
 
+                // Mostrar la cantidad de ventas encontradas
                 cantidad.textContent = resultado.cantidad;
+
+                // Mostrar la suma de los importes
                 total.textContent = mostrarMonto(resultado.total_importes);
 
+                // Comprobar si no se encontraron ventas
                 if (resultado.datos.length === 0) {
+                    // Crear una fila y una celda para mostrar el mensaje
                     const fila = document.createElement("tr");
                     const celda = document.createElement("td");
 
+                    // Hacer que la celda ocupe las cinco columnas
                     celda.colSpan = 5;
                     celda.textContent = "No se encontraron ventas";
 
+                    // Agregar la celda a la fila
                     fila.appendChild(celda);
+
+                    // Agregar la fila a la tabla
                     tabla.appendChild(fila);
 
+                    // Informar que no hay ventas para el filtro elegido
                     mensaje.textContent =
                         "Consulta realizada. No hay ventas para este filtro";
 
                     return;
                 }
 
+                // Recorrer las ventas recibidas desde la API
                 resultado.datos.forEach(function(venta) {
+                    // Crear una nueva fila para cada venta
                     const fila = document.createElement("tr");
 
+                    // Agregar los datos de la venta en sus respectivas columnas
                     fila.appendChild(crearCelda(venta.nro_venta));
                     fila.appendChild(crearCelda(venta.fecha));
                     fila.appendChild(crearCelda(venta.dni_cliente));
@@ -283,24 +344,33 @@
                     ));
                     fila.appendChild(crearCelda(venta.estado_pago));
 
+                    // Agregar la fila completa a la tabla
                     tabla.appendChild(fila);
                 });
 
+                // Informar que el reporte se genero correctamente
                 mensaje.textContent = "Reporte generado correctamente";
 
             } catch (error) {
+                // Crear una fila para mostrar el mensaje de error
                 const fila = document.createElement("tr");
                 const celda = document.createElement("td");
 
+                // Hacer que la celda ocupe las cinco columnas
                 celda.colSpan = 5;
                 celda.textContent = "No se pudieron cargar las ventas";
 
+                // Agregar la celda a la fila
                 fila.appendChild(celda);
+
+                // Mostrar la fila en la tabla
                 tabla.appendChild(fila);
 
+                // Mostrar el mensaje del error
                 mensaje.textContent = error.message;
 
             } finally {
+                // Volver a activar el boton al terminar la consulta
                 botonBuscar.disabled = false;
             }
         });

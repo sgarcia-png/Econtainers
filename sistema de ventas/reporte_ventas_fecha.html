@@ -8,15 +8,19 @@
 
     <title>Reporte de ventas por fecha</title>
 
+    <!-- Conectar la hoja de estilos principal -->
     <link rel="stylesheet" href="estilos.css">
 
+    <!-- Estilos propios de esta pagina -->
     <style>
+        /* Contenedor principal del reporte */
         .reporte-contenedor {
             max-width: 1100px;
             margin: 30px auto;
             padding: 20px;
         }
 
+        /* Organizar los filtros de fechas */
         .filtros-reporte {
             display: flex;
             flex-wrap: wrap;
@@ -27,6 +31,7 @@
             border-radius: 8px;
         }
 
+        /* Organizar cada campo del formulario */
         .campo-reporte {
             display: flex;
             flex-direction: column;
@@ -35,12 +40,14 @@
             min-width: 180px;
         }
 
+        /* Dar formato a los campos de fecha */
         .campo-reporte input {
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
 
+        /* Estilo del boton para buscar las ventas */
         .boton-buscar {
             padding: 11px 18px;
             background: #103E73;
@@ -50,10 +57,12 @@
             cursor: pointer;
         }
 
+        /* Cambiar el color del boton al pasar el mouse */
         .boton-buscar:hover {
             background: #082B54;
         }
 
+        /* Organizar los datos del resumen */
         .resumen-reporte {
             display: flex;
             flex-wrap: wrap;
@@ -61,6 +70,7 @@
             margin: 20px 0;
         }
 
+        /* Dar formato a cada tarjeta del resumen */
         .dato-reporte {
             flex: 1;
             min-width: 180px;
@@ -70,28 +80,33 @@
             border-left: 5px solid #F28C00;
         }
 
+        /* Estilo de los titulos de las tarjetas */
         .dato-reporte h3 {
             margin-top: 0;
             color: #103E73;
         }
 
+        /* Estilo de los valores del resumen */
         .dato-reporte p {
             font-size: 22px;
             font-weight: bold;
             margin-bottom: 0;
         }
 
+        /* Permitir desplazamiento horizontal de la tabla */
         .tabla-reporte-contenedor {
             overflow-x: auto;
             margin-top: 20px;
         }
 
+        /* Estilo general de la tabla */
         .tabla-reporte {
             width: 100%;
             border-collapse: collapse;
             background: white;
         }
 
+        /* Espaciado y alineacion de las celdas */
         .tabla-reporte th,
         .tabla-reporte td {
             padding: 12px;
@@ -99,15 +114,18 @@
             border-bottom: 1px solid #ddd;
         }
 
+        /* Estilo de los encabezados de la tabla */
         .tabla-reporte th {
             background: #103E73;
             color: white;
         }
 
+        /* Espaciado del mensaje del reporte */
         .mensaje-reporte {
             margin: 15px 0;
         }
 
+        /* Estilo de los enlaces para volver */
         .enlace-volver {
             display: inline-block;
             margin-bottom: 20px;
@@ -118,8 +136,10 @@
     </style>
 </head>
 
+<!-- Cuerpo de la pagina -->
 <body class="principal-body">
 
+    <!-- Encabezado con el logo y el usuario -->
     <header class="encabezado">
         <img
             src="img/logo.png"
@@ -132,8 +152,10 @@
         </div>
     </header>
 
+    <!-- Contenido principal del reporte -->
     <main class="contenido-principal">
 
+    <!-- Titulo, descripcion y boton para volver -->
     <div class="ventas-encabezado">
 
         <div>
@@ -146,12 +168,14 @@
             </p>
         </div>
 
+        <!-- Volver al menu principal -->
         <a href="principal.php" class="boton-volver">
             Volver al inicio
         </a>
 
     </div>
 
+        <!-- Formulario para seleccionar el periodo de fechas -->
         <form id="formularioReporte" class="filtros-reporte">
 
             <div class="campo-reporte">
@@ -164,16 +188,19 @@
                 <input type="date" id="fechaHasta" required>
             </div>
 
+            <!-- Boton que inicia la busqueda -->
             <button type="submit" id="botonBuscar" class="boton-buscar">
                 Buscar ventas
             </button>
 
         </form>
 
+        <!-- Lugar donde se muestran los mensajes del reporte -->
         <p id="mensajeReporte" class="mensaje-reporte" aria-live="polite">
             Selecciona las fechas y presiona Buscar ventas
         </p>
 
+        <!-- Resumen con la cantidad de ventas y los importes -->
         <section class="resumen-reporte">
 
             <article class="dato-reporte">
@@ -188,6 +215,7 @@
 
         </section>
 
+        <!-- Tabla donde se muestran las ventas encontradas -->
         <div class="tabla-reporte-contenedor">
 
             <table class="tabla-reporte">
@@ -201,6 +229,7 @@
                     </tr>
                 </thead>
 
+                <!-- Los datos de las ventas se agregan desde JavaScript -->
                 <tbody id="tablaReporte">
                     <tr>
                         <td colspan="5">
@@ -214,7 +243,9 @@
 
     </main>
 
+    <!-- Codigo JavaScript para realizar la consulta y mostrar los resultados -->
     <script>
+        // Obtener los elementos del formulario y del reporte
         const formulario = document.getElementById("formularioReporte");
         const fechaDesde = document.getElementById("fechaDesde");
         const fechaHasta = document.getElementById("fechaHasta");
@@ -224,19 +255,23 @@
         const totalImportes = document.getElementById("totalImportes");
         const tablaReporte = document.getElementById("tablaReporte");
 
+        // Crear una celda de tabla y colocar el valor recibido
         function crearCelda(valor) {
             const celda = document.createElement("td");
             celda.textContent = valor ?? "";
             return celda;
         }
 
+        // Convertir un importe a formato de moneda argentina
         function mostrarMonto(valor) {
             const monto = Number(valor);
 
+            // Comprobar que el importe sea un numero valido
             if (!Number.isFinite(monto)) {
                 return "No disponible";
             }
 
+            // Mostrar el importe con el formato de pesos argentinos
             return monto.toLocaleString("es-AR", {
                 style: "currency",
                 currency: "ARS",
@@ -244,69 +279,96 @@
             });
         }
 
+        // Detectar cuando se envia el formulario
         formulario.addEventListener("submit", async function(evento) {
+            // Evitar que la pagina se recargue al enviar el formulario
             evento.preventDefault();
 
+            // Comprobar que la fecha inicial no sea posterior a la final
             if (fechaDesde.value > fechaHasta.value) {
                 mensajeReporte.textContent =
                     "La fecha desde no puede ser posterior a la fecha hasta";
                 return;
             }
 
+            // Desactivar el boton mientras se realiza la busqueda
             botonBuscar.disabled = true;
+
+            // Mostrar un mensaje mientras se buscan las ventas
             mensajeReporte.textContent = "Buscando ventas...";
+
+            // Limpiar los resultados anteriores de la tabla
             tablaReporte.replaceChildren();
 
             try {
+                // Preparar las fechas que se enviaran al archivo PHP
                 const parametros = new URLSearchParams({
                     desde: fechaDesde.value,
                     hasta: fechaHasta.value
                 });
 
+                // Enviar las fechas a la API mediante una solicitud GET
                 const respuesta = await fetch(
                     "api/reporte_ventas_fecha.php?" + parametros.toString(),
                     {
+                        // Indicar que se espera recibir una respuesta JSON
                         headers: {
                             "Accept": "application/json"
                         },
+
+                        // Evitar utilizar una respuesta guardada en cache
                         cache: "no-store"
                     }
                 );
 
+                // Convertir la respuesta recibida a formato JSON
                 const resultado = await respuesta.json();
 
+                // Comprobar si la consulta tuvo algun error
                 if (!respuesta.ok || !resultado.ok) {
                     throw new Error(
                         resultado.mensaje || "No se pudo generar el reporte"
                     );
                 }
 
+                // Mostrar la cantidad de ventas encontradas
                 cantidadVentas.textContent = resultado.cantidad;
 
+                // Mostrar la suma de los importes
                 totalImportes.textContent = mostrarMonto(
                     resultado.total_importes
                 );
 
+                // Comprobar si no se encontraron ventas
                 if (resultado.datos.length === 0) {
+                    // Crear una fila y una celda para mostrar el mensaje
                     const fila = document.createElement("tr");
                     const celda = document.createElement("td");
 
+                    // Hacer que la celda ocupe las cinco columnas
                     celda.colSpan = 5;
                     celda.textContent =
                         "No se encontraron ventas en ese periodo";
 
+                    // Agregar la celda a la fila
                     fila.appendChild(celda);
+
+                    // Agregar la fila a la tabla
                     tablaReporte.appendChild(fila);
 
+                    // Informar que la consulta no encontro ventas
                     mensajeReporte.textContent =
                         "Consulta realizada. No se encontraron ventas";
 
                     return;
                 }
 
+                // Recorrer las ventas recibidas desde la API
                 resultado.datos.forEach(function(venta) {
+                    // Crear una nueva fila para cada venta
                     const fila = document.createElement("tr");
 
+                    // Agregar los datos de la venta en sus respectivas columnas
                     fila.appendChild(crearCelda(venta.nro_venta));
                     fila.appendChild(crearCelda(venta.fecha));
                     fila.appendChild(crearCelda(venta.dni_cliente));
@@ -315,25 +377,34 @@
                     ));
                     fila.appendChild(crearCelda(venta.estado_pago));
 
+                    // Agregar la fila completa a la tabla
                     tablaReporte.appendChild(fila);
                 });
 
+                // Informar que el reporte se genero correctamente
                 mensajeReporte.textContent =
                     "Reporte generado correctamente.";
 
             } catch (error) {
+                // Crear una fila para mostrar el mensaje de error
                 const fila = document.createElement("tr");
                 const celda = document.createElement("td");
 
+                // Hacer que la celda ocupe las cinco columnas
                 celda.colSpan = 5;
                 celda.textContent = "No se pudieron cargar las ventas";
 
+                // Agregar la celda a la fila
                 fila.appendChild(celda);
+
+                // Mostrar la fila en la tabla
                 tablaReporte.appendChild(fila);
 
+                // Mostrar el mensaje del error
                 mensajeReporte.textContent = error.message;
 
             } finally {
+                // Volver a activar el boton al terminar la busqueda
                 botonBuscar.disabled = false;
             }
         });

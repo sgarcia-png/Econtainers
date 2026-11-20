@@ -2,16 +2,22 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- Configuracion general de la pagina -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion de clientes</title>
+
+    <!-- Conectar los estilos generales del sistema -->
     <link rel="stylesheet" href="estilos.css">
 
+    <!-- Estilos propios de esta pantalla -->
     <style>
+        /* Aplicar el mismo calculo de tamaño a todos los elementos */
         * {
             box-sizing: border-box;
         }
 
+        /* Estilos generales del cuerpo de la pagina */
         body {
             margin: 0;
             padding: 25px;
@@ -20,6 +26,7 @@
             color: #222;
         }
 
+        /* Contenedor principal de la pantalla */
         .contenedor {
             max-width: 1100px;
             margin: auto;
@@ -29,26 +36,31 @@
             box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
         }
 
+        /* Estilo del titulo principal */
         h1 {
             color: #103E73;
             margin-top: 0;
         }
 
+        /* Estilo de los subtitulos */
         h2 {
             color: #103E73;
             margin-top: 30px;
         }
 
+        /* Separacion entre los campos del formulario */
         .campo {
             margin-bottom: 15px;
         }
 
+        /* Estilo de las etiquetas de los campos */
         label {
             display: block;
             margin-bottom: 6px;
             font-weight: bold;
         }
 
+        /* Estilo general de los campos de texto */
         input {
             width: 100%;
             padding: 10px;
@@ -57,17 +69,20 @@
             font-size: 15px;
         }
 
+        /* Cambiar el borde cuando se selecciona un campo */
         input:focus {
             outline: 2px solid #b9d5f3;
             border-color: #103E73;
         }
 
+        /* Organizar los botones en una misma fila */
         .botones {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
         }
 
+        /* Estilo general de los botones */
         button {
             padding: 10px 15px;
             border: none;
@@ -77,27 +92,33 @@
             font-size: 14px;
         }
 
+        /* Apariencia de los botones deshabilitados */
         button:disabled {
             opacity: 0.6;
             cursor: not-allowed;
         }
 
+        /* Boton principal para registrar o guardar */
         .principal {
             background: #103E73;
         }
 
+        /* Boton secundario para cancelar */
         .secundario {
             background: #F28C00;
         }
 
+        /* Boton para eliminar un cliente */
         .eliminar {
             background: #c62828;
         }
 
+        /* Permitir desplazamiento horizontal de la tabla */
         .tabla-contenedor {
             overflow-x: auto;
         }
 
+        /* Estilos generales de la tabla */
         table {
             width: 100%;
             margin-top: 15px;
@@ -105,27 +126,32 @@
             background: white;
         }
 
+        /* Espaciado y separacion de las celdas */
         th, td {
             padding: 12px;
             border-bottom: 1px solid #ddd;
             text-align: left;
         }
 
+        /* Estilo de los encabezados de la tabla */
         th {
             background: #103E73;
             color: white;
         }
 
+        /* Cambiar el fondo de una fila al pasar el cursor */
         tr:hover td {
             background: #f7f9fc;
         }
 
+        /* Organizar los botones de cada cliente */
         .acciones {
             display: flex;
             gap: 7px;
             flex-wrap: wrap;
         }
 
+        /* Ocultar el mensaje hasta que sea necesario mostrarlo */
         #mensaje {
             display: none;
             margin-top: 15px;
@@ -133,26 +159,31 @@
             border-radius: 5px;
         }
 
+        /* Mostrar el mensaje cuando tiene la clase visible */
         #mensaje.visible {
             display: block;
         }
 
+        /* Estilo para los mensajes de exito */
         #mensaje.exito {
             background: #e4f5e8;
             color: #17652b;
         }
 
+        /* Estilo para los mensajes de error */
         #mensaje.error {
             background: #fde8e8;
             color: #a11b1b;
         }
 
+        /* Estilo de las notas informativas */
         .nota {
             color: #555;
             font-size: 14px;
             line-height: 1.5;
         }
 
+        /* Adaptar la pantalla a dispositivos pequeños */
         @media (max-width: 600px) {
             body {
                 padding: 10px;
@@ -167,8 +198,10 @@
 
 <body class="principal-body">
 
+    <!-- Contenido principal de la pantalla -->
     <main class="contenido-principal">
 
+        <!-- Encabezado con el titulo y el enlace para volver -->
         <div class="ventas-encabezado">
 
             <div>
@@ -179,6 +212,7 @@
                 </p>
             </div>
 
+            <!-- Volver al menu principal -->
             <a href="principal.php" class="boton-volver">
                 Volver al inicio
             </a>
@@ -186,48 +220,62 @@
         </div>
 
         <div class="contenedor">
+
+    <!-- Explicacion de las operaciones disponibles -->
     <p class="nota">
         Desde esta pantalla podes registrar, editar, consultar y eliminar clientes
     </p>
 
+    <!-- Titulo que cambia segun se registre o edite un cliente -->
     <h2 id="tituloFormulario">Registrar cliente</h2>
 
+    <!-- Formulario para ingresar los datos de un cliente -->
     <form id="formularioCliente">
+
+        <!-- Campo para ingresar el DNI -->
         <div class="campo">
             <label for="DNI">DNI:</label>
             <input type="text" id="DNI" name="DNI"
                    maxlength="20" required>
         </div>
 
+        <!-- Campo para ingresar el nombre -->
         <div class="campo">
             <label for="nombre">Nombre:</label>
             <input type="text" id="nombre" name="nombre"
                    maxlength="100" required>
         </div>
 
+        <!-- Campo para ingresar el apellido -->
         <div class="campo">
             <label for="apellido">Apellido:</label>
             <input type="text" id="apellido" name="apellido"
                    maxlength="100" required>
         </div>
 
+        <!-- Campo para ingresar el telefono -->
         <div class="campo">
             <label for="telefono">Telefono:</label>
             <input type="text" id="telefono" name="telefono"
                    maxlength="30">
         </div>
 
+        <!-- Campo para ingresar el correo electronico -->
         <div class="campo">
             <label for="email">Correo electronico:</label>
             <input type="email" id="email" name="email"
                    maxlength="150">
         </div>
 
+        <!-- Botones para guardar o cancelar la operacion -->
         <div class="botones">
+
+            <!-- Enviar los datos del formulario -->
             <button type="submit" class="principal" id="btnGuardar">
                 Registrar cliente
             </button>
 
+            <!-- Cancelar la edicion de un cliente -->
             <button type="button" class="secundario"
                     id="btnCancelar" hidden>
                 Cancelar edicion
@@ -235,8 +283,10 @@
         </div>
     </form>
 
+    <!-- Lugar donde JavaScript muestra mensajes de exito o error -->
     <div id="mensaje" role="status" aria-live="polite"></div>
 
+    <!-- Tabla donde se muestran los clientes registrados -->
     <h2>Clientes registrados</h2>
 
     <div class="tabla-contenedor">
@@ -251,6 +301,8 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
+
+            <!-- JavaScript coloca los clientes dentro de este cuerpo -->
             <tbody id="tablaClientes">
                 <tr>
                     <td colspan="6">Cargando clientes...</td>
@@ -262,7 +314,9 @@
         </div>
     </main>
 
+<!-- Codigo JavaScript que controla el formulario y la tabla -->
 <script>
+    // Obtener los elementos HTML que se van a utilizar
     const formulario = document.getElementById("formularioCliente");
     const tablaClientes = document.getElementById("tablaClientes");
     const mensaje = document.getElementById("mensaje");
@@ -270,97 +324,130 @@
     const btnGuardar = document.getElementById("btnGuardar");
     const btnCancelar = document.getElementById("btnCancelar");
 
+    // Indicar si el formulario esta en modo edicion
     let modoEdicion = false;
 
+    // Mostrar un mensaje y asignarle un estilo
     function mostrarMensaje(texto, tipo) {
         mensaje.textContent = texto;
         mensaje.className = "visible " + tipo;
     }
 
+    // Borrar el mensaje que se estaba mostrando
     function ocultarMensaje() {
         mensaje.textContent = "";
         mensaje.className = "";
     }
 
+    // Crear una celda de la tabla y colocarle un texto
     function crearCelda(texto) {
         const celda = document.createElement("td");
         celda.textContent = texto ?? "";
         return celda;
     }
 
+    // Consultar la API y mostrar los clientes registrados
     async function cargarClientes() {
+
+        // Mostrar un mensaje mientras se cargan los clientes
         tablaClientes.innerHTML =
             '<tr><td colspan="6">Cargando clientes...</td></tr>';
 
         try {
+            // Solicitar la lista de clientes al archivo PHP
             const respuesta = await fetch("api/clientes/listar.php");
             const resultado = await respuesta.json();
 
+            // Comprobar si la respuesta fue correcta
             if (!respuesta.ok || resultado.success === false) {
                 throw new Error(
                     resultado.message || "No se pudieron cargar los clientes"
                 );
             }
 
+            // Obtener los clientes segun el formato de respuesta de la API
             const clientes = Array.isArray(resultado)
                 ? resultado
                 : (resultado.data || []);
 
+            // Limpiar la tabla antes de mostrar los resultados
             tablaClientes.innerHTML = "";
 
+            // Comprobar si existen clientes registrados
             if (clientes.length === 0) {
                 tablaClientes.innerHTML =
                     '<tr><td colspan="6">No hay clientes registrados</td></tr>';
                 return;
             }
 
+            // Recorrer la lista de clientes recibida desde PHP
             clientes.forEach(cliente => {
+
+                // Crear una fila nueva para cada cliente
                 const fila = document.createElement("tr");
 
+                // Agregar los datos del cliente en distintas celdas
                 fila.appendChild(crearCelda(cliente.DNI));
                 fila.appendChild(crearCelda(cliente.nombre));
                 fila.appendChild(crearCelda(cliente.apellido));
                 fila.appendChild(crearCelda(cliente.telefono));
                 fila.appendChild(crearCelda(cliente.email));
 
+                // Crear la celda que contiene los botones de acciones
                 const celdaAcciones = document.createElement("td");
                 const acciones = document.createElement("div");
                 acciones.className = "acciones";
 
+                // Crear el boton para editar al cliente
                 const btnEditar = document.createElement("button");
                 btnEditar.type = "button";
                 btnEditar.className = "principal";
                 btnEditar.textContent = "Editar";
+
+                // Al hacer clic, cargar los datos del cliente en el formulario
                 btnEditar.addEventListener("click", () => editarCliente(cliente));
 
+                // Crear el boton para eliminar al cliente
                 const btnEliminar = document.createElement("button");
                 btnEliminar.type = "button";
                 btnEliminar.className = "eliminar";
                 btnEliminar.textContent = "Eliminar";
+
+                // Al hacer clic, ejecutar la funcion para eliminar al cliente
                 btnEliminar.addEventListener(
                     "click",
                     () => eliminarCliente(cliente, btnEliminar)
                 );
 
+                // Agregar los botones a la celda de acciones
                 acciones.appendChild(btnEditar);
                 acciones.appendChild(btnEliminar);
                 celdaAcciones.appendChild(acciones);
                 fila.appendChild(celdaAcciones);
+
+                // Agregar la fila completa a la tabla
                 tablaClientes.appendChild(fila);
             });
 
         } catch (error) {
+            // Mostrar un mensaje en la tabla si ocurre un error
             tablaClientes.innerHTML =
                 '<tr><td colspan="6">Error al cargar los clientes</td></tr>';
+
             mostrarMensaje(error.message, "error");
         }
     }
 
+    // Preparar el formulario para editar los datos de un cliente
     function editarCliente(cliente) {
+
+        // Borrar mensajes anteriores
         ocultarMensaje();
 
+        // Activar el modo de edicion
         modoEdicion = true;
 
+        // Colocar los datos del cliente seleccionado en los campos
         document.getElementById("DNI").value = cliente.DNI;
         document.getElementById("nombre").value = cliente.nombre || "";
         document.getElementById("apellido").value = cliente.apellido || "";
@@ -370,73 +457,100 @@
         // El DNI no se modifica porque identifica al cliente
         document.getElementById("DNI").readOnly = true;
 
+        // Cambiar los textos para indicar que se esta editando
         tituloFormulario.textContent = "Editar cliente";
         btnGuardar.textContent = "Guardar cambios";
         btnCancelar.hidden = false;
 
+        // Desplazar la pantalla hasta el formulario
         formulario.scrollIntoView({
             behavior: "smooth",
             block: "start"
         });
     }
 
+    // Cancelar la edicion y dejar el formulario listo para registrar
     function cancelarEdicion() {
+
+        // Desactivar el modo de edicion y limpiar los campos
         modoEdicion = false;
         formulario.reset();
 
+        // Volver a permitir que se ingrese un DNI
         document.getElementById("DNI").readOnly = false;
 
+        // Recuperar los textos originales del formulario
         tituloFormulario.textContent = "Registrar cliente";
         btnGuardar.textContent = "Registrar cliente";
         btnCancelar.hidden = true;
 
+        // Borrar los mensajes anteriores
         ocultarMensaje();
     }
 
+    // Ejecutar la funcion anterior cuando se presiona Cancelar
     btnCancelar.addEventListener("click", cancelarEdicion);
 
+    // Detectar cuando se envia el formulario
     formulario.addEventListener("submit", async function(evento) {
+
+        // Evitar que el formulario se envie de la manera tradicional
         evento.preventDefault();
+
+        // Ocultar mensajes anteriores
         ocultarMensaje();
 
+        // Obtener todos los datos del formulario
         const datos = new FormData(formulario);
 
+        // Elegir el archivo PHP segun se este registrando o editando
         const url = modoEdicion
             ? "api/clientes/actualizar.php"
             : "api/clientes/registrar.php";
 
+        // Deshabilitar el boton mientras se realiza la operacion
         btnGuardar.disabled = true;
 
         try {
+            // Enviar los datos al archivo PHP mediante POST
             const respuesta = await fetch(url, {
                 method: "POST",
                 body: datos
             });
 
+            // Leer la respuesta enviada por PHP
             const resultado = await respuesta.json();
 
+            // Comprobar si la operacion fue correcta
             if (!respuesta.ok || !resultado.success) {
                 throw new Error(
                     resultado.message || "No se pudo guardar el cliente"
                 );
             }
 
+            // Mostrar el mensaje de resultado
             mostrarMensaje(
                 resultado.message || "Operacion realizada correctamente",
                 "exito"
             );
 
+            // Limpiar el formulario y actualizar la tabla
             cancelarEdicion();
             await cargarClientes();
 
         } catch (error) {
+            // Mostrar el error si no se pudo guardar el cliente
             mostrarMensaje(error.message, "error");
         } finally {
+            // Volver a habilitar el boton al terminar la operacion
             btnGuardar.disabled = false;
         }
     });
 
+    // Enviar una solicitud para eliminar un cliente
     async function eliminarCliente(cliente, boton) {
+
+        // Pedir confirmacion antes de eliminar al cliente
         const confirmar = confirm(
             "¿Querés eliminar al cliente " +
             cliente.nombre + " " + cliente.apellido +
@@ -444,49 +558,61 @@
             "Si tiene ventas asociadas, el sistema no permitira eliminarlo"
         );
 
+        // Si la persona cancela, no continuar con la eliminacion
         if (!confirmar) {
             return;
         }
 
+        // Ocultar mensajes anteriores y deshabilitar el boton
         ocultarMensaje();
         boton.disabled = true;
 
         try {
+            // Crear un formulario para enviar el DNI del cliente
             const datos = new FormData();
             datos.append("DNI", cliente.DNI);
 
+            // Enviar el DNI al archivo PHP que realiza la eliminacion
             const respuesta = await fetch("api/clientes/eliminar.php", {
                 method: "POST",
                 body: datos
             });
 
+            // Leer la respuesta enviada por PHP
             const resultado = await respuesta.json();
 
+            // Comprobar si la eliminacion fue correcta
             if (!respuesta.ok || !resultado.success) {
                 throw new Error(
                     resultado.message || "No se pudo eliminar el cliente"
                 );
             }
 
+            // Si se estaba editando al mismo cliente, limpiar el formulario
             if (modoEdicion &&
                 document.getElementById("DNI").value === cliente.DNI) {
                 cancelarEdicion();
             }
 
+            // Mostrar el mensaje de eliminacion
             mostrarMensaje(
                 resultado.message || "Cliente eliminado correctamente",
                 "exito"
             );
 
+            // Actualizar la tabla para mostrar los cambios
             await cargarClientes();
 
         } catch (error) {
+            // Mostrar el error si no se pudo eliminar al cliente
             mostrarMensaje(error.message, "error");
         } finally {
+            // Volver a habilitar el boton
             boton.disabled = false;
         }
     }
 
+    // Cargar los clientes automaticamente al abrir la pantalla
     cargarClientes();
 </script>
 </body>
